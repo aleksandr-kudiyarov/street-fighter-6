@@ -7,12 +7,12 @@ public class StreetFighterClient(HttpClient httpClient)
 {
     private readonly RootRequest _request = GetRequest();
 
-    public async Task<CharacterWinRates[]?> GetResponse()
+    public async Task<CharacterWinRates[]?> GetResponse(CancellationToken cancellationToken)
     {
         const string uri = "https://www.streetfighter.com/6/buckler/api/profile/play/act/characterwinrate";
 
-        var response = await httpClient.PostAsJsonAsync(uri, _request);
-        var rootResponse = await response.Content.ReadFromJsonAsync<RootResponse>();
+        var response = await httpClient.PostAsJsonAsync(uri, _request, cancellationToken: cancellationToken);
+        var rootResponse = await response.Content.ReadFromJsonAsync<RootResponse>(cancellationToken: cancellationToken);
         var result = GetCharacterWinRates(rootResponse);
         return result;
     }
