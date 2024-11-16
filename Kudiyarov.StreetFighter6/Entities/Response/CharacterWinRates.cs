@@ -24,13 +24,4 @@ public record CharacterWinRates
     
     [JsonPropertyName("character_sort")]
     public required int CharacterSort { get; init; }
-    
-    [JsonPropertyName("charac_ter_id")]
-    public required int CharacTerId { get; init; }
-    
-    [JsonPropertyName("batt_le_count")]
-    public required int BattLeCount { get; init; }
-    
-    [JsonPropertyName("charac_ter_sort")]
-    public required int CharacTerSort { get; init; }
 }
