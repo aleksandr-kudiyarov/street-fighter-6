@@ -7,7 +7,7 @@ public class StreetFighterClient(HttpClient httpClient)
 {
     private readonly RootRequest _request = GetRequest();
 
-    public async Task<CharacterWinRates[]?> GetResponse(CancellationToken cancellationToken)
+    public async Task<Response> GetResponse(CancellationToken cancellationToken)
     {
         const string uri = "https://www.streetfighter.com/6/buckler/api/profile/play/act/characterwinrate";
 
@@ -17,13 +17,12 @@ public class StreetFighterClient(HttpClient httpClient)
         return result;
     }
 
-    private static CharacterWinRates[] GetCharacterWinRates(RootResponse? root)
+    private static Response GetCharacterWinRates(RootResponse? root)
     {
         ArgumentNullException.ThrowIfNull(root);
 
         var response = root.Response;
-        var winRates= response.CharacterWinRates;
-        return winRates;
+        return response;
     }
 
     private static RootRequest GetRequest()
