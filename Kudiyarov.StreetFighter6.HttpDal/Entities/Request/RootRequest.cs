@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Kudiyarov.StreetFighter6.Entities;
+namespace Kudiyarov.StreetFighter6.HttpDal.Entities.Request;
 
 public record RootRequest
 {

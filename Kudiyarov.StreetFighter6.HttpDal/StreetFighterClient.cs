@@ -1,7 +1,8 @@
-using Kudiyarov.StreetFighter6.Entities;
-using Kudiyarov.StreetFighter6.Entities.Response;
+using System.Net.Http.Json;
+using Kudiyarov.StreetFighter6.HttpDal.Entities.Request;
+using Kudiyarov.StreetFighter6.HttpDal.Entities.Response;
 
-namespace Kudiyarov.StreetFighter6;
+namespace Kudiyarov.StreetFighter6.HttpDal;
 
 public class StreetFighterClient(HttpClient httpClient)
 {

@@ -1,4 +1,4 @@
-namespace Kudiyarov.StreetFighter6.Entities;
+namespace Kudiyarov.StreetFighter6.HttpDal.Entities;
 
 public enum Character
 {
@@ -25,7 +25,5 @@ public enum Character
     Ed = 21,
     Akuma = 22,
     MBison = 23,
-    Terry = 24,
-    Random = int.MaxValue - 1,
-    All = int.MaxValue
+    Terry = 24
 }
