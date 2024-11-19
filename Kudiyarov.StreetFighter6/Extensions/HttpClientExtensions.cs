@@ -6,11 +6,7 @@ public static class HttpClientExtensions
 {
     public static void AddStreetFighterClient(this HostApplicationBuilder builder)
     {
-        var options = builder.Configuration
-            .GetSection("Authentication")
-            .Get<AuthenticationOptions>();
-        
-        ArgumentNullException.ThrowIfNull(options);
+        var options = GetAuthenticationOptions(builder);
 
         builder.Services
             .AddHttpClient<StreetFighterClient>(client =>
@@ -20,6 +16,17 @@ public static class HttpClientExtensions
             })
             .AddStandardResilienceHandler();
     }
-}
 
-public record AuthenticationOptions(string UserAgent, string Cookie);
+    private static AuthenticationOptions GetAuthenticationOptions(HostApplicationBuilder builder)
+    {
+        var options = builder.Configuration
+            .GetSection("Authentication")
+            .Get<AuthenticationOptions>();
+
+        ArgumentNullException.ThrowIfNull(options);
+
+        return options;
+    }
+    
+    private record AuthenticationOptions(string UserAgent, string Cookie);
+}
