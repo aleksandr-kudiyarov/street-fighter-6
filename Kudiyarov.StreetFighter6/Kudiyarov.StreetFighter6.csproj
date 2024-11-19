@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Kudiyarov.StreetFighter6.Common\Kudiyarov.StreetFighter6.Common.csproj" />
       <ProjectReference Include="..\Kudiyarov.StreetFighter6.HttpDal\Kudiyarov.StreetFighter6.HttpDal.csproj" />
     </ItemGroup>
 
