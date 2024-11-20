@@ -1,52 +1,55 @@
-using Kudiyarov.StreetFighter6;
 using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.Extensions;
 using Kudiyarov.StreetFighter6.HttpDal;
 using Spectre.Console;
 
-var builder = Host.CreateApplicationBuilder(args);
-var configuration = GetConfiguration();
+namespace Kudiyarov.StreetFighter6;
 
-builder.Logging.ClearProviders();
-builder.AddStreetFighterClient();
-
-var app = builder.Build();
-
-var table = new Table();
-
-await AnsiConsole.Live(table)
-    .StartAsync(async ctx =>
+internal static class Program
+{
+    public static async Task Main(string[] args)
     {
-        var response = await GetResponse();
-        table.InitTable(response);
-        ctx.Refresh();
+        var builder = Host.CreateApplicationBuilder(args);
+        var configuration = GetConfiguration(builder.Configuration);
+        builder.Logging.ClearProviders();
+        builder.AddStreetFighterClient();
 
-        while (true)
-        {
-            await Task.Delay(configuration.Delay);
-            response = await GetResponse();
-            table.RefreshTable(response);
-            ctx.Refresh();
-        }
-    });
+        var app = builder.Build();
+        var table = new Table();
 
-return;
+        await AnsiConsole.Live(table)
+            .StartAsync(async ctx =>
+            {
+                var response = await GetResponse(app);
+                table.InitTable(response);
+                ctx.Refresh();
 
-Configuration GetConfiguration()
-{
-    var configuration1 = builder.Configuration
-        .GetSection("Configuration")
-        .Get<Configuration>();
+                while (true)
+                {
+                    await Task.Delay(configuration.Delay);
+                    response = await GetResponse(app);
+                    table.RefreshTable(response);
+                    ctx.Refresh();
+                }
+            });
+    }
 
-    ArgumentNullException.ThrowIfNull(configuration1);
+    private static async Task<GetWinRatesResponse> GetResponse(IHost app)
+    {
+        await using var serviceScope = app.Services.CreateAsyncScope();
+        var client = serviceScope.ServiceProvider.GetRequiredService<StreetFighterClient>();
+        var response = await client.GetResponse();
+        return response;
+    }
     
-    return configuration1;
-}
+    private static Configuration GetConfiguration(IConfiguration configuration)
+    {
+        var config = configuration
+            .GetSection("Configuration")
+            .Get<Configuration>();
 
-async Task<GetWinRatesResponse> GetResponse()
-{
-    await using var serviceScope = app.Services.CreateAsyncScope();
-    var client = serviceScope.ServiceProvider.GetRequiredService<StreetFighterClient>();
-    var response = await client.GetResponse();
-    return response;
+        ArgumentNullException.ThrowIfNull(config);
+    
+        return config;
+    }
 }
