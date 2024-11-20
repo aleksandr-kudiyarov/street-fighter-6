@@ -1,7 +1,9 @@
 using Kudiyarov.StreetFighter6.Extensions;
+using Kudiyarov.StreetFighter6.HttpDal;
+using Spectre.Console;
 
 var builder = Host.CreateApplicationBuilder(args);
-
+builder.Logging.ClearProviders();
 builder.AddStreetFighterClient();
 
 var app = builder.Build();
@@ -16,33 +18,12 @@ await AnsiConsole.Live(table)
         var response = await client.GetResponse();
         table.InitTable(response);
         ctx.Refresh();
-    });
 
-namespace Kudiyarov.StreetFighter6
-{
-    public static class TableExtensions
-    {
-        public static void InitTable(this Table table, GetWinRatesResponse response)
+        while (true)
         {
-            table.AddColumn("Character");
-            table.AddColumn("Wins");
-            table.AddColumn("Battles");
-            table.AddColumn("");
-
-            foreach (var element in response.CharacterInfos)
-            {
-                var name = element.Name;
-                var wins = element.Wins;
-                var battles = element.Battles;
-                var winsPercentage = (double)element.Wins / element.Battles;
-                
-                table.AddRow(
-                    name,
-                    wins.ToString(),
-                    battles.ToString(),
-                    winsPercentage.ToString("P1")
-                );
-            }
+            await Task.Delay(5_000);
+            response = await client.GetResponse();
+            table.RefreshTable(response);
+            ctx.Refresh();
         }
-    }
-}
+    });
