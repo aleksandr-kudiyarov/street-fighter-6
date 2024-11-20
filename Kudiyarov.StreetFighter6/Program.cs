@@ -1,9 +1,12 @@
+using Kudiyarov.StreetFighter6;
 using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.Extensions;
 using Kudiyarov.StreetFighter6.HttpDal;
 using Spectre.Console;
 
 var builder = Host.CreateApplicationBuilder(args);
+var configuration = GetConfiguration();
+
 builder.Logging.ClearProviders();
 builder.AddStreetFighterClient();
 
@@ -20,7 +23,7 @@ await AnsiConsole.Live(table)
 
         while (true)
         {
-            await Task.Delay(5_000);
+            await Task.Delay(configuration.Delay);
             response = await GetResponse();
             table.RefreshTable(response);
             ctx.Refresh();
@@ -28,6 +31,17 @@ await AnsiConsole.Live(table)
     });
 
 return;
+
+Configuration GetConfiguration()
+{
+    var configuration1 = builder.Configuration
+        .GetSection("Configuration")
+        .Get<Configuration>();
+
+    ArgumentNullException.ThrowIfNull(configuration1);
+    
+    return configuration1;
+}
 
 async Task<GetWinRatesResponse> GetResponse()
 {
