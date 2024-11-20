@@ -3,7 +3,7 @@ using Microsoft.Net.Http.Headers;
 
 namespace Kudiyarov.StreetFighter6.Extensions;
 
-public static class HttpClientExtensions
+public static class HttpClientBuilderExtensions
 {
     public static void AddStreetFighterClient(this HostApplicationBuilder builder)
     {
