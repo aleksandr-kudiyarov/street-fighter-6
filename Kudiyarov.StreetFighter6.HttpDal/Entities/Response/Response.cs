@@ -5,5 +5,5 @@ namespace Kudiyarov.StreetFighter6.HttpDal.Entities.Response;
 public record Response
 {
     [JsonPropertyName("character_win_rates")]
-    public required CharacterWinRates[] CharacterWinRates { get; init; }
+    public required CharacterWinRates[] CharacterWinRate { get; init; }
 }

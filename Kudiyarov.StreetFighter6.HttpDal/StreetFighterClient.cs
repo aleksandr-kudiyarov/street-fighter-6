@@ -29,23 +29,34 @@ public class StreetFighterClient(HttpClient httpClient)
 
     private static GetWinRatesResponse Map(Response source)
     {
-        var winRates = source.CharacterWinRates.Select(Map);
+        var winRates = source.CharacterWinRate
+            .Where(IsCharacter)
+            .OrderBy(character => character.CharacterSort)
+            .Select(Map);
         
         var destination = new GetWinRatesResponse
         {
-            WinRates = winRates
+            CharacterInfos = winRates
         };
         
         return destination;
     }
 
-    private static WinRate Map(CharacterWinRates source)
+    private static bool IsCharacter(CharacterWinRates source)
     {
-        var destination = new WinRate
+        const int any = 253;
+        const int random = 254;
+        var isCharacter = source.CharacterId is not (any or random);
+        return isCharacter;
+    }
+
+    private static CharacterInfo Map(CharacterWinRates source)
+    {
+        var destination = new CharacterInfo
         {
-            CharacterName = source.CharacterName,
-            WinsCount = source.WinCount,
-            BattlesCount = source.BattleCount
+            Name = source.CharacterName,
+            Wins = source.WinCount,
+            Battles = source.BattleCount
         };
         
         return destination;
