@@ -1,6 +1,8 @@
 using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.Extensions;
 using Kudiyarov.StreetFighter6.HttpDal;
+using Kudiyarov.StreetFighter6.Logic.Implementations;
+using Kudiyarov.StreetFighter6.Logic.Interfaces;
 using Spectre.Console;
 
 namespace Kudiyarov.StreetFighter6;
@@ -13,6 +15,7 @@ internal static class Program
         var configuration = GetConfiguration(builder.Configuration);
         builder.Logging.ClearProviders();
         builder.AddStreetFighterClient();
+        builder.Services.AddSingleton<IStyleProvider, StyleProvider>();
 
         var app = builder.Build();
         var table = new Table();
