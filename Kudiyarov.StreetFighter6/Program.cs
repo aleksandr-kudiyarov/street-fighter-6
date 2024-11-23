@@ -23,24 +23,42 @@ internal static class Program
         await AnsiConsole.Live(table)
             .StartAsync(async ctx =>
             {
-                var response = await GetResponse(app);
-                table.InitTable(response);
-                ctx.Refresh();
+                await InitTable(app, table, ctx);
 
                 while (true)
                 {
                     await Task.Delay(configuration.Delay);
-                    response = await GetResponse(app);
-                    table.RefreshTable(response);
-                    ctx.Refresh();
+                    await RefreshTable(app, table, ctx);
                 }
             });
     }
 
-    private static async Task<GetWinRatesResponse> GetResponse(IHost app)
+    private static async Task RefreshTable(IHost app, Table table, LiveDisplayContext ctx)
     {
         await using var serviceScope = app.Services.CreateAsyncScope();
-        var client = serviceScope.ServiceProvider.GetRequiredService<StreetFighterClient>();
+        var serviceProvider = serviceScope.ServiceProvider;
+        var client = serviceProvider.GetRequiredService<StreetFighterClient>();
+        var styleProvider = serviceProvider.GetRequiredService<IStyleProvider>();
+
+        var response = await GetResponse(client);
+        table.RefreshTable(response, styleProvider);
+        ctx.Refresh();
+    }
+
+    private static async Task InitTable(IHost app, Table table, LiveDisplayContext ctx)
+    {
+        await using var serviceScope = app.Services.CreateAsyncScope();
+        var serviceProvider = serviceScope.ServiceProvider;
+        var client = serviceProvider.GetRequiredService<StreetFighterClient>();
+        var styleProvider = serviceProvider.GetRequiredService<IStyleProvider>();
+        
+        var response = await GetResponse(client);
+        table.InitTable(response, styleProvider);
+        ctx.Refresh();
+    }
+
+    private static async Task<GetWinRatesResponse> GetResponse(StreetFighterClient client)
+    {
         var response = await client.GetResponse();
         return response;
     }

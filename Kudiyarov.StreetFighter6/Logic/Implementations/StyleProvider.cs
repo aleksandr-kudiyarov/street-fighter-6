@@ -7,9 +7,9 @@ public class StyleProvider : IStyleProvider
 {
     private const double Step = (double) 1 / 3;
 
-    private readonly Style _badStyle = new(Color.Red);
-    private readonly Style _normalStyle = new(Color.DarkSlateGray1);
-    private readonly Style _goodStyle = new(Color.Green);
+    private readonly Style _badStyle = new(new Color(242, 119, 122));
+    private readonly Style _normalStyle = new();
+    private readonly Style _goodStyle = new(new Color(153, 204, 153));
     
     public Style GetStyle(double percentage)
     {
