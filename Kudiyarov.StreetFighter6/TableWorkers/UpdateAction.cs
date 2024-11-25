@@ -1,15 +1,16 @@
 using Kudiyarov.StreetFighter6.Common.Entities;
+using Kudiyarov.StreetFighter6.HttpDal;
 using Kudiyarov.StreetFighter6.Logic.Interfaces;
 using Spectre.Console;
 
 namespace Kudiyarov.StreetFighter6.TableWorkers;
 
-public sealed class UpdateWorker : TableWorker
+public sealed class UpdateAction(
+    StreetFighterClient client,
+    IStyleProvider styleProvider)
+    : TableAction(client)
 {
-    protected override void Impl(
-        Table table,
-        GetWinRatesResponse response,
-        IStyleProvider styleProvider)
+    protected override void Action(Table table, GetWinRatesResponse response)
     {
         var row = 0;
             

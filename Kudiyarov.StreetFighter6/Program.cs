@@ -15,28 +15,35 @@ internal static class Program
         var authOptions = builder.Configuration.GetRequiredValue<Authentication>("Authentication");
         
         builder.Logging.ClearProviders();
+        builder.Services.AddScoped<InitAction>();
+        builder.Services.AddScoped<UpdateAction>();
         builder.Services.AddStreetFighterClient(authOptions);
         builder.Services.AddSingleton<IStyleProvider, StyleProvider>();
 
-        builder.Services.AddSingleton<InitWorker>();
-        builder.Services.AddSingleton<UpdateWorker>();
-
         var app = builder.Build();
         var table = new Table();
-        
-        var initWorker = app.Services.GetRequiredService<InitWorker>();
-        var updateWorker = app.Services.GetRequiredService<UpdateWorker>();
 
         await AnsiConsole.Live(table)
             .StartAsync(async ctx =>
             {
-                await initWorker.Do(ctx, table, app.Services);
+                await InvokeTableAction<InitAction>(ctx, table, app.Services);
 
                 while (true)
                 {
                     await Task.Delay(configuration.Delay);
-                    await updateWorker.Do(ctx, table, app.Services);
+                    await InvokeTableAction<UpdateAction>(ctx, table, app.Services);
                 }
             });
+    }
+ 
+    private static async Task InvokeTableAction<TAction>(
+        LiveDisplayContext ctx,
+        Table table,
+        IServiceProvider serviceProvider)
+        where TAction : TableAction
+    {
+        await using var scope = serviceProvider.CreateAsyncScope();
+        var action = scope.ServiceProvider.GetRequiredService<TAction>();
+        await action.Invoke(ctx, table);
     }
 }
