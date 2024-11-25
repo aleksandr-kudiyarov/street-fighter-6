@@ -33,7 +33,10 @@ internal static class Program
             });
     }
 
-    private static async Task RefreshTable(IServiceProvider serviceProvider, Table table, LiveDisplayContext ctx)
+    private static async Task RefreshTable(
+        IServiceProvider serviceProvider,
+        Table table,
+        LiveDisplayContext ctx)
     {
         await using var serviceScope = serviceProvider.CreateAsyncScope();
         var innerServiceProvider = serviceScope.ServiceProvider;
@@ -45,7 +48,10 @@ internal static class Program
         ctx.Refresh();
     }
 
-    private static async Task InitTable(IServiceProvider serviceProvider, Table table, LiveDisplayContext ctx)
+    private static async Task InitTable(
+        IServiceProvider serviceProvider,
+        Table table,
+        LiveDisplayContext ctx)
     {
         await using var serviceScope = serviceProvider.CreateAsyncScope();
         var innerServiceProvider = serviceScope.ServiceProvider;
