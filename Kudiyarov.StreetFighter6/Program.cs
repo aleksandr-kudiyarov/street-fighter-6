@@ -23,34 +23,34 @@ internal static class Program
         await AnsiConsole.Live(table)
             .StartAsync(async ctx =>
             {
-                await InitTable(app, table, ctx);
+                await InitTable(app.Services, table, ctx);
 
                 while (true)
                 {
                     await Task.Delay(configuration.Delay);
-                    await RefreshTable(app, table, ctx);
+                    await RefreshTable(app.Services, table, ctx);
                 }
             });
     }
 
-    private static async Task RefreshTable(IHost app, Table table, LiveDisplayContext ctx)
+    private static async Task RefreshTable(IServiceProvider serviceProvider, Table table, LiveDisplayContext ctx)
     {
-        await using var serviceScope = app.Services.CreateAsyncScope();
-        var serviceProvider = serviceScope.ServiceProvider;
-        var client = serviceProvider.GetRequiredService<StreetFighterClient>();
-        var styleProvider = serviceProvider.GetRequiredService<IStyleProvider>();
+        await using var serviceScope = serviceProvider.CreateAsyncScope();
+        var innerServiceProvider = serviceScope.ServiceProvider;
+        var client = innerServiceProvider.GetRequiredService<StreetFighterClient>();
+        var styleProvider = innerServiceProvider.GetRequiredService<IStyleProvider>();
 
         var response = await GetResponse(client);
         table.RefreshTable(response, styleProvider);
         ctx.Refresh();
     }
 
-    private static async Task InitTable(IHost app, Table table, LiveDisplayContext ctx)
+    private static async Task InitTable(IServiceProvider serviceProvider, Table table, LiveDisplayContext ctx)
     {
-        await using var serviceScope = app.Services.CreateAsyncScope();
-        var serviceProvider = serviceScope.ServiceProvider;
-        var client = serviceProvider.GetRequiredService<StreetFighterClient>();
-        var styleProvider = serviceProvider.GetRequiredService<IStyleProvider>();
+        await using var serviceScope = serviceProvider.CreateAsyncScope();
+        var innerServiceProvider = serviceScope.ServiceProvider;
+        var client = innerServiceProvider.GetRequiredService<StreetFighterClient>();
+        var styleProvider = innerServiceProvider.GetRequiredService<IStyleProvider>();
         
         var response = await GetResponse(client);
         table.InitTable(response, styleProvider);
