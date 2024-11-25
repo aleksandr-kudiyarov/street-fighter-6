@@ -12,8 +12,8 @@ internal static class Program
     public static async Task Main(string[] args)
     {
         var builder = Host.CreateApplicationBuilder(args);
-        var configuration = GetConfiguration(builder.Configuration);
-        var authOptions = GetAuthenticationOptions(builder.Configuration);
+        var configuration = builder.Configuration.GetRequiredValue<Configuration>("Configuration");
+        var authOptions = builder.Configuration.GetRequiredValue<Authentication>("Authentication");
         
         builder.Logging.ClearProviders();
         builder.Services.AddStreetFighterClient(authOptions);
@@ -69,27 +69,5 @@ internal static class Program
     {
         var response = await client.GetResponse();
         return response;
-    }
-    
-    private static Authentication GetAuthenticationOptions(IConfiguration configuration)
-    {
-        var options = configuration
-            .GetSection("Authentication")
-            .Get<Authentication>();
-
-        ArgumentNullException.ThrowIfNull(options);
-
-        return options;
-    }
-    
-    private static Configuration GetConfiguration(IConfiguration configuration)
-    {
-        var config = configuration
-            .GetSection("Configuration")
-            .Get<Configuration>();
-
-        ArgumentNullException.ThrowIfNull(config);
-    
-        return config;
     }
 }
