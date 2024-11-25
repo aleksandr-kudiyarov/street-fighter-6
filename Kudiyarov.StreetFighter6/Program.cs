@@ -1,8 +1,7 @@
-using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.Extensions;
-using Kudiyarov.StreetFighter6.HttpDal;
 using Kudiyarov.StreetFighter6.Logic.Implementations;
 using Kudiyarov.StreetFighter6.Logic.Interfaces;
+using Kudiyarov.StreetFighter6.TableWorkers;
 using Spectre.Console;
 
 namespace Kudiyarov.StreetFighter6;
@@ -19,55 +18,25 @@ internal static class Program
         builder.Services.AddStreetFighterClient(authOptions);
         builder.Services.AddSingleton<IStyleProvider, StyleProvider>();
 
+        builder.Services.AddSingleton<InitWorker>();
+        builder.Services.AddSingleton<UpdateWorker>();
+
         var app = builder.Build();
         var table = new Table();
+        
+        var initWorker = app.Services.GetRequiredService<InitWorker>();
+        var updateWorker = app.Services.GetRequiredService<UpdateWorker>();
 
         await AnsiConsole.Live(table)
             .StartAsync(async ctx =>
             {
-                await InitTable(app.Services, table, ctx);
+                await initWorker.Do(ctx, table, app.Services);
 
                 while (true)
                 {
                     await Task.Delay(configuration.Delay);
-                    await RefreshTable(app.Services, table, ctx);
+                    await updateWorker.Do(ctx, table, app.Services);
                 }
             });
-    }
-
-    private static async Task RefreshTable(
-        IServiceProvider serviceProvider,
-        Table table,
-        LiveDisplayContext ctx)
-    {
-        await using var serviceScope = serviceProvider.CreateAsyncScope();
-        var innerServiceProvider = serviceScope.ServiceProvider;
-        var client = innerServiceProvider.GetRequiredService<StreetFighterClient>();
-        var styleProvider = innerServiceProvider.GetRequiredService<IStyleProvider>();
-
-        var response = await GetResponse(client);
-        table.RefreshTable(response, styleProvider);
-        ctx.Refresh();
-    }
-
-    private static async Task InitTable(
-        IServiceProvider serviceProvider,
-        Table table,
-        LiveDisplayContext ctx)
-    {
-        await using var serviceScope = serviceProvider.CreateAsyncScope();
-        var innerServiceProvider = serviceScope.ServiceProvider;
-        var client = innerServiceProvider.GetRequiredService<StreetFighterClient>();
-        var styleProvider = innerServiceProvider.GetRequiredService<IStyleProvider>();
-        
-        var response = await GetResponse(client);
-        table.InitTable(response, styleProvider);
-        ctx.Refresh();
-    }
-
-    private static async Task<GetWinRatesResponse> GetResponse(StreetFighterClient client)
-    {
-        var response = await client.GetResponse();
-        return response;
     }
 }
