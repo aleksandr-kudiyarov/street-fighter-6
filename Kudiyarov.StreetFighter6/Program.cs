@@ -13,8 +13,10 @@ internal static class Program
     {
         var builder = Host.CreateApplicationBuilder(args);
         var configuration = GetConfiguration(builder.Configuration);
+        var authOptions = GetAuthenticationOptions(builder.Configuration);
+        
         builder.Logging.ClearProviders();
-        builder.Services.AddStreetFighterClient(builder.Configuration);
+        builder.Services.AddStreetFighterClient(authOptions);
         builder.Services.AddSingleton<IStyleProvider, StyleProvider>();
 
         var app = builder.Build();
@@ -67,6 +69,17 @@ internal static class Program
     {
         var response = await client.GetResponse();
         return response;
+    }
+    
+    private static Authentication GetAuthenticationOptions(IConfiguration configuration)
+    {
+        var options = configuration
+            .GetSection("Authentication")
+            .Get<Authentication>();
+
+        ArgumentNullException.ThrowIfNull(options);
+
+        return options;
     }
     
     private static Configuration GetConfiguration(IConfiguration configuration)

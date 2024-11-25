@@ -7,10 +7,8 @@ public static class HttpClientBuilderExtensions
 {
     public static void AddStreetFighterClient(
         this IServiceCollection services,
-        IConfiguration configuration)
+        Authentication options)
     {
-        var options = GetAuthenticationOptions(configuration);
-
         services
             .AddHttpClient<StreetFighterClient>(client =>
             {
@@ -19,17 +17,4 @@ public static class HttpClientBuilderExtensions
             })
             .AddStandardResilienceHandler();
     }
-
-    private static AuthenticationOptions GetAuthenticationOptions(IConfiguration configuration)
-    {
-        var options = configuration
-            .GetSection("Authentication")
-            .Get<AuthenticationOptions>();
-
-        ArgumentNullException.ThrowIfNull(options);
-
-        return options;
-    }
-    
-    private record AuthenticationOptions(string UserAgent, string Cookie);
 }
