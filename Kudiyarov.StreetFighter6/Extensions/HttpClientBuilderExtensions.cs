@@ -5,11 +5,13 @@ namespace Kudiyarov.StreetFighter6.Extensions;
 
 public static class HttpClientBuilderExtensions
 {
-    public static void AddStreetFighterClient(this HostApplicationBuilder builder)
+    public static void AddStreetFighterClient(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        var options = GetAuthenticationOptions(builder);
+        var options = GetAuthenticationOptions(configuration);
 
-        builder.Services
+        services
             .AddHttpClient<StreetFighterClient>(client =>
             {
                 client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, options.UserAgent);
@@ -18,9 +20,9 @@ public static class HttpClientBuilderExtensions
             .AddStandardResilienceHandler();
     }
 
-    private static AuthenticationOptions GetAuthenticationOptions(HostApplicationBuilder builder)
+    private static AuthenticationOptions GetAuthenticationOptions(IConfiguration configuration)
     {
-        var options = builder.Configuration
+        var options = configuration
             .GetSection("Authentication")
             .Get<AuthenticationOptions>();
 

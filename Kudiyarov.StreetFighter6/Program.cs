@@ -14,7 +14,7 @@ internal static class Program
         var builder = Host.CreateApplicationBuilder(args);
         var configuration = GetConfiguration(builder.Configuration);
         builder.Logging.ClearProviders();
-        builder.AddStreetFighterClient();
+        builder.Services.AddStreetFighterClient(builder.Configuration);
         builder.Services.AddSingleton<IStyleProvider, StyleProvider>();
 
         var app = builder.Build();
