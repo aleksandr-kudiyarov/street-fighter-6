@@ -44,6 +44,7 @@ internal static class Program
     {
         await using var scope = serviceProvider.CreateAsyncScope();
         var action = scope.ServiceProvider.GetRequiredService<TAction>();
-        await action.Invoke(ctx, table);
+        await action.Invoke(table);
+        ctx.Refresh();
     }
 }

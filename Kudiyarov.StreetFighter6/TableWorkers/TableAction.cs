@@ -6,13 +6,10 @@ namespace Kudiyarov.StreetFighter6.TableWorkers;
 
 public abstract class TableAction(StreetFighterClient client)
 {
-    public async Task Invoke(
-        LiveDisplayContext ctx,
-        Table table)
+    public async Task Invoke(Table table)
     {
         var response = await client.GetResponse();
         Action(table, response);
-        ctx.Refresh();
     }
 
     protected abstract void Action(Table table, GetWinRatesResponse response);
