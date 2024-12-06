@@ -14,7 +14,7 @@ public class StreetFighterClient(HttpClient httpClient)
     
     private readonly RootRequest _request = GetWinRateRequest();
 
-    public async Task<GetWinRatesResponse> GetResponse(CancellationToken cancellationToken = default)
+    public async Task<GetWinRatesResponse> GetWinRates(CancellationToken cancellationToken = default)
     {
         const string uri = "https://www.streetfighter.com/6/buckler/api/profile/play/act/characterwinrate";
 

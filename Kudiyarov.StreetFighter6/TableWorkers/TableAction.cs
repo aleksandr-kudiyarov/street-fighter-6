@@ -8,7 +8,7 @@ public abstract class TableAction(StreetFighterClient client)
 {
     public async Task Invoke(Table table)
     {
-        var response = await client.GetResponse();
+        var response = await client.GetWinRates();
         Action(table, response);
     }
 
