@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
-using Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Request;
+using Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Response;
-using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Request;
+using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Response;
 
 namespace Kudiyarov.StreetFighter6.HttpDal;
@@ -12,16 +12,16 @@ public class StreetFighterClient(HttpClient httpClient)
     private const long TargetShortId = 2991759546;
     private const int TargetSeasonId = -1;
     
-    private readonly RootRequest _getWinRateRequest = GetWinRateRequest();
+    private readonly GetWinRateRequest _getWinRateRequest = GetWinRateRequest();
     private readonly GetLeagueInfoRequest _getLeagueInfoRequest = GetLeagueInfoRequest();
 
-    public async Task<Response> GetWinRates(CancellationToken cancellationToken = default)
+    public async Task<GetWinRateResponse> GetWinRate(CancellationToken cancellationToken = default)
     {
         const string uri = "https://www.streetfighter.com/6/buckler/api/profile/play/act/characterwinrate";
 
         var response = await httpClient.PostAsJsonAsync(uri, _getWinRateRequest, cancellationToken: cancellationToken);
         response.EnsureSuccessStatusCode();
-        var root = await response.Content.ReadFromJsonAsync<RootResponse>(cancellationToken: cancellationToken);
+        var root = await response.Content.ReadFromJsonAsync<GetWinRateResponseRoot>(cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(root);
         return root.Response;
     }
@@ -37,9 +37,9 @@ public class StreetFighterClient(HttpClient httpClient)
         return root.Response;
     }
 
-    private static RootRequest GetWinRateRequest()
+    private static GetWinRateRequest GetWinRateRequest()
     {
-        var rootRequest = new RootRequest
+        var rootRequest = new GetWinRateRequest
         {
             TargetShortId = TargetShortId,
             TargetSeasonId = TargetSeasonId,

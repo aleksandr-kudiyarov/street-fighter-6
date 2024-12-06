@@ -10,7 +10,7 @@ public sealed class InitAction(
     IStyleProvider styleProvider)
     : TableAction(client)
 {
-    protected override void Action(Table table, Response response)
+    protected override void Action(Table table, GetWinRateResponse response)
     {
         table.AddColumn("Character");
         table.AddColumn("Wins");

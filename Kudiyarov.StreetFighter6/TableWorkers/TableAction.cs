@@ -8,11 +8,11 @@ public abstract class TableAction(StreetFighterClient client)
 {
     public async Task Invoke(Table table)
     {
-        var response = await client.GetWinRates();
+        var response = await client.GetWinRate();
         Action(table, response);
     }
 
-    protected abstract void Action(Table table, Response response);
+    protected abstract void Action(Table table, GetWinRateResponse response);
 
     protected IEnumerable<CharacterWinRates> GetCharacterWinRates(IEnumerable<CharacterWinRates> winRates)
     {

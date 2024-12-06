@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Request;
+namespace Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates;
 
-public record RootRequest
+public record GetWinRateRequest
 {
     [JsonPropertyName("targetShortId")]
     public required long TargetShortId { get; init; }

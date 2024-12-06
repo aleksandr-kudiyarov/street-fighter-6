@@ -2,8 +2,8 @@ using System.Text.Json.Serialization;
 
 namespace Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Response;
 
-public record RootResponse
+public record GetWinRateResponseRoot
 {
     [JsonPropertyName("response")]
-    public required Response Response { get; init; }
+    public required GetWinRateResponse Response { get; init; }
 }

@@ -10,7 +10,7 @@ public sealed class UpdateAction(
     IStyleProvider styleProvider)
     : TableAction(client)
 {
-    protected override void Action(Table table, Response response)
+    protected override void Action(Table table, GetWinRateResponse response)
     {
         var row = 0;
             

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Request;
+namespace Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo;
 
 public record GetLeagueInfoRequest
 {
