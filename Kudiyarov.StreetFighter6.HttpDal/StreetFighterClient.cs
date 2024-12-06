@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Request;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Response;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Request;
@@ -16,14 +15,15 @@ public class StreetFighterClient(HttpClient httpClient)
     private readonly RootRequest _getWinRateRequest = GetWinRateRequest();
     private readonly GetLeagueInfoRequest _getLeagueInfoRequest = GetLeagueInfoRequest();
 
-    public async Task<GetWinRatesResponse> GetWinRates(CancellationToken cancellationToken = default)
+    public async Task<Response> GetWinRates(CancellationToken cancellationToken = default)
     {
         const string uri = "https://www.streetfighter.com/6/buckler/api/profile/play/act/characterwinrate";
 
         var response = await httpClient.PostAsJsonAsync(uri, _getWinRateRequest, cancellationToken: cancellationToken);
-        var rootResponse = await response.Content.ReadFromJsonAsync<RootResponse>(cancellationToken: cancellationToken);
-        var result = GetWinRates(rootResponse);
-        return result;
+        response.EnsureSuccessStatusCode();
+        var root = await response.Content.ReadFromJsonAsync<RootResponse>(cancellationToken: cancellationToken);
+        ArgumentNullException.ThrowIfNull(root);
+        return root.Response;
     }
 
     public async Task<GetLeagueInfoResponse> GetLeagueInfo(CancellationToken cancellationToken = default)
@@ -35,49 +35,6 @@ public class StreetFighterClient(HttpClient httpClient)
         var root = await response.Content.ReadFromJsonAsync<GetLeagueInfoResponseRoot>(cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(root);
         return root.Response;
-    }
-
-    private static GetWinRatesResponse GetWinRates(RootResponse? root)
-    {
-        ArgumentNullException.ThrowIfNull(root);
-
-        var response = Map(root.Response);
-        return response;
-    }
-
-    private static GetWinRatesResponse Map(Response source)
-    {
-        var winRates = source.CharacterWinRate
-            .Where(IsCharacter)
-            .OrderBy(character => character.CharacterSort)
-            .Select(Map);
-        
-        var destination = new GetWinRatesResponse
-        {
-            CharacterInfos = winRates
-        };
-        
-        return destination;
-    }
-
-    private static bool IsCharacter(CharacterWinRates source)
-    {
-        const int any = 253;
-        const int random = 254;
-        var isCharacter = source.CharacterId is not (any or random);
-        return isCharacter;
-    }
-
-    private static CharacterInfo Map(CharacterWinRates source)
-    {
-        var destination = new CharacterInfo
-        {
-            Name = source.CharacterName,
-            Wins = source.WinCount,
-            Battles = source.BattleCount
-        };
-        
-        return destination;
     }
 
     private static RootRequest GetWinRateRequest()

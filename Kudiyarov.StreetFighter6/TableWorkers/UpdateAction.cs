@@ -1,5 +1,5 @@
-using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.HttpDal;
+using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Response;
 using Kudiyarov.StreetFighter6.Logic.Interfaces;
 using Spectre.Console;
 
@@ -10,15 +10,15 @@ public sealed class UpdateAction(
     IStyleProvider styleProvider)
     : TableAction(client)
 {
-    protected override void Action(Table table, GetWinRatesResponse response)
+    protected override void Action(Table table, Response response)
     {
         var row = 0;
             
-        foreach (var character in response.CharacterInfos)
+        foreach (var character in GetCharacterWinRates(response.CharacterWinRate))
         {
-            var wins = character.Wins;
-            var battles = character.Battles;
-            var winsPercentage = (double)character.Wins / character.Battles;
+            var wins = character.WinCount;
+            var battles = character.BattleCount;
+            var winsPercentage = (double)character.WinCount / character.BattleCount;
             var winsPercentageStyle = styleProvider.GetStyle(winsPercentage);
                 
             table.UpdateCell(row, 1, new Text(wins.ToString()));
