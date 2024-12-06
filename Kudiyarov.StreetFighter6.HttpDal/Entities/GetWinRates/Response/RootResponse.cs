@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Kudiyarov.StreetFighter6.HttpDal.Entities.Response;
+namespace Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Response;
 
 public record RootResponse
 {

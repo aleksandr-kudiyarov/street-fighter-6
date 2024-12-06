@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using Kudiyarov.StreetFighter6.Common.Entities;
-using Kudiyarov.StreetFighter6.HttpDal.Entities.Request;
-using Kudiyarov.StreetFighter6.HttpDal.Entities.Response;
+using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Request;
+using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Response;
 
 namespace Kudiyarov.StreetFighter6.HttpDal;
 
