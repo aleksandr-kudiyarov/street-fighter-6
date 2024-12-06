@@ -8,7 +8,7 @@ public record GetLeagueInfoRequest
     public required long TargetShortId { get; init; }
     
     [JsonPropertyName("targetSeasonId")]
-    public required int TargetSeasonId { get; init; }
+    public required long TargetSeasonId { get; init; }
     
     [JsonPropertyName("locale")]
     public required string Locale { get; init; }

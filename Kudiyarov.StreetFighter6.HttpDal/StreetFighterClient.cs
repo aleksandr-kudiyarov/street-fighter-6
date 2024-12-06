@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using Kudiyarov.StreetFighter6.Common.Entities;
+using Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Request;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Request;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Response;
 
@@ -7,7 +8,11 @@ namespace Kudiyarov.StreetFighter6.HttpDal;
 
 public class StreetFighterClient(HttpClient httpClient)
 {
-    private readonly RootRequest _request = GetRequest();
+    private const string Locale = "en";
+    private const long TargetShortId = 2991759546;
+    private const int TargetSeasonId = -1;
+    
+    private readonly RootRequest _request = GetWinRateRequest();
 
     public async Task<GetWinRatesResponse> GetResponse(CancellationToken cancellationToken = default)
     {
@@ -62,16 +67,29 @@ public class StreetFighterClient(HttpClient httpClient)
         return destination;
     }
 
-    private static RootRequest GetRequest()
+    private static RootRequest GetWinRateRequest()
     {
         var rootRequest = new RootRequest
         {
-            TargetShortId = 2991759546,
-            TargetSeasonId = -1,
+            TargetShortId = TargetShortId,
+            TargetSeasonId = TargetSeasonId,
             TargetModeId = 2,
-            Locale = "en"
+            Locale = Locale
         };
         
         return rootRequest;
+    }
+
+    private static GetLeagueInfoRequest GetLeagueInfoRequest()
+    {
+        var request = new GetLeagueInfoRequest
+        {
+            TargetShortId = TargetShortId,
+            TargetSeasonId = TargetSeasonId,
+            Locale = Locale,
+            Peak = true
+        };
+        
+        return request;
     }
 }
