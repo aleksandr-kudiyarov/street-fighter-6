@@ -4,6 +4,6 @@ namespace Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Response;
 
 public record GetLeagueInfoResponse
 {
-    [JsonPropertyName("response")]
-    public required Response Response { get; init; }
+    [JsonPropertyName("character_league_infos")]
+    public required CharacterLeagueInfo[] CharacterLeagueInfos { get; init; }
 }

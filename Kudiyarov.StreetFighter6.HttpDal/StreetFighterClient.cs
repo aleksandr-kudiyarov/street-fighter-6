@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Request;
+using Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Response;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Request;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Response;
 
@@ -12,16 +13,28 @@ public class StreetFighterClient(HttpClient httpClient)
     private const long TargetShortId = 2991759546;
     private const int TargetSeasonId = -1;
     
-    private readonly RootRequest _request = GetWinRateRequest();
+    private readonly RootRequest _getWinRateRequest = GetWinRateRequest();
+    private readonly GetLeagueInfoRequest _getLeagueInfoRequest = GetLeagueInfoRequest();
 
     public async Task<GetWinRatesResponse> GetWinRates(CancellationToken cancellationToken = default)
     {
         const string uri = "https://www.streetfighter.com/6/buckler/api/profile/play/act/characterwinrate";
 
-        var response = await httpClient.PostAsJsonAsync(uri, _request, cancellationToken: cancellationToken);
+        var response = await httpClient.PostAsJsonAsync(uri, _getWinRateRequest, cancellationToken: cancellationToken);
         var rootResponse = await response.Content.ReadFromJsonAsync<RootResponse>(cancellationToken: cancellationToken);
         var result = GetWinRates(rootResponse);
         return result;
+    }
+
+    public async Task<GetLeagueInfoResponse> GetLeagueInfo(CancellationToken cancellationToken = default)
+    {
+        const string uri = "https://www.streetfighter.com/6/buckler/api/profile/play/act/leagueinfo";
+
+        var response = await httpClient.PostAsJsonAsync(uri, _getLeagueInfoRequest, cancellationToken: cancellationToken);
+        response.EnsureSuccessStatusCode();
+        var root = await response.Content.ReadFromJsonAsync<GetLeagueInfoResponseRoot>(cancellationToken: cancellationToken);
+        ArgumentNullException.ThrowIfNull(root);
+        return root.Response;
     }
 
     private static GetWinRatesResponse GetWinRates(RootResponse? root)
