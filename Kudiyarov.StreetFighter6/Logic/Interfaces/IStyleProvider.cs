@@ -1,8 +1,10 @@
+using Kudiyarov.StreetFighter6.TableWorkers;
 using Spectre.Console;
 
 namespace Kudiyarov.StreetFighter6.Logic.Interfaces;
 
 public interface IStyleProvider
 {
-    public Style GetStyle(double percentage);
+    Style GetWinRateStyle(double percentage);
+    Style GetLeagueStyle(LeagueEnum league);
 }

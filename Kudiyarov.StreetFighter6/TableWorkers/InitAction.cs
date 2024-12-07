@@ -17,6 +17,7 @@ public sealed class InitAction(
         table.AddColumn("Battles");
         table.AddColumn("Wins %");
         table.AddColumn("League Points");
+        table.AddColumn("League");
 
         foreach (var element in GetCharacterWinRates(response.CharacterInfos))
         {
@@ -24,15 +25,20 @@ public sealed class InitAction(
             var wins = element.WinCount;
             var battles = element.BattleCount;
             var winsPercentage = (double)element.WinCount / element.BattleCount;
-            var winsPercentageStyle = styleProvider.GetStyle(winsPercentage);
+            var winsPercentageStyle = styleProvider.GetWinRateStyle(winsPercentage);
             var leaguePoints = element.LeaguePoint;
-                
+            
+            var leagueInfo = GetLeagueInfo(leaguePoints);
+            var leagueLevel = GetLeagueLevel(leagueInfo.Level);
+            var leagueStyle = styleProvider.GetLeagueStyle(leagueInfo.League);
+            
             table.AddRow(
                 new Text(name),
                 new Text(wins.ToString()),
                 new Text(battles.ToString()),
                 new Text(winsPercentage.ToString("P1"), winsPercentageStyle),
-                new Text(leaguePoints.ToString())
+                new Text(leaguePoints.ToString()),
+                new Text(leagueLevel, leagueStyle)
             );
         }
     }

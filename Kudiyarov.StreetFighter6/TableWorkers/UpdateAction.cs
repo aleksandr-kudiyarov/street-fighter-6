@@ -19,14 +19,19 @@ public sealed class UpdateAction(
             var wins = character.WinCount;
             var battles = character.BattleCount;
             var winsPercentage = (double)character.WinCount / character.BattleCount;
-            var winsPercentageStyle = styleProvider.GetStyle(winsPercentage);
+            var winsPercentageStyle = styleProvider.GetWinRateStyle(winsPercentage);
             var leaguePoints = character.LeaguePoint;
+            
+            var leagueInfo = GetLeagueInfo(leaguePoints);
+            var leagueLevel = GetLeagueLevel(leagueInfo.Level);
+            var leagueStyle = styleProvider.GetLeagueStyle(leagueInfo.League);
                 
             table.UpdateCell(row, 1, new Text(wins.ToString()));
             table.UpdateCell(row, 2, new Text(battles.ToString()));
             table.UpdateCell(row, 3, new Text(winsPercentage.ToString("P1"), winsPercentageStyle));
             table.UpdateCell(row, 4, new Text(leaguePoints.ToString()));
-
+            table.UpdateCell(row, 5, new Text(leagueLevel, leagueStyle));
+            
             row++;
         }
     }
