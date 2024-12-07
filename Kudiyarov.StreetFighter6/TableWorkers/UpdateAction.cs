@@ -20,10 +20,12 @@ public sealed class UpdateAction(
             var battles = character.BattleCount;
             var winsPercentage = (double)character.WinCount / character.BattleCount;
             var winsPercentageStyle = styleProvider.GetStyle(winsPercentage);
+            var leaguePoints = character.LeaguePoint;
                 
             table.UpdateCell(row, 1, new Text(wins.ToString()));
             table.UpdateCell(row, 2, new Text(battles.ToString()));
             table.UpdateCell(row, 3, new Text(winsPercentage.ToString("P1"), winsPercentageStyle));
+            table.UpdateCell(row, 4, new Text(leaguePoints.ToString()));
 
             row++;
         }
