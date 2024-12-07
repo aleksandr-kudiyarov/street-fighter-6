@@ -1,7 +1,7 @@
 using Kudiyarov.StreetFighter6.Common.Entities;
 using Spectre.Console;
 
-namespace Kudiyarov.StreetFighter6.Logic;
+namespace Kudiyarov.StreetFighter6.StyleProviders;
 
 public sealed class LeagueInfoStyleProvider : StyleProvider<LeagueEnum>
 {

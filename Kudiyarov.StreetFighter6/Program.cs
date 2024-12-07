@@ -1,6 +1,7 @@
 using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.Extensions;
 using Kudiyarov.StreetFighter6.Logic;
+using Kudiyarov.StreetFighter6.StyleProviders;
 using Kudiyarov.StreetFighter6.TableWorkers;
 using Spectre.Console;
 

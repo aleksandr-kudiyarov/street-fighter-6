@@ -1,6 +1,6 @@
 using Spectre.Console;
 
-namespace Kudiyarov.StreetFighter6.Logic;
+namespace Kudiyarov.StreetFighter6.StyleProviders;
 
 public abstract class StyleProvider<TRequest>
 {
