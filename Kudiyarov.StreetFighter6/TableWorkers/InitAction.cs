@@ -1,23 +1,23 @@
-using Kudiyarov.StreetFighter6.HttpDal;
-using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Response;
+using Kudiyarov.StreetFighter6.Common;
+using Kudiyarov.StreetFighter6.Logic.Implementations;
 using Kudiyarov.StreetFighter6.Logic.Interfaces;
 using Spectre.Console;
 
 namespace Kudiyarov.StreetFighter6.TableWorkers;
 
 public sealed class InitAction(
-    StreetFighterClient client,
+    StreetFighterLogic client,
     IStyleProvider styleProvider)
     : TableAction(client)
 {
-    protected override void Action(Table table, GetWinRateResponse response)
+    protected override void Action(Table table, GetCharacterInfoResponse response)
     {
         table.AddColumn("Character");
         table.AddColumn("Wins");
         table.AddColumn("Battles");
         table.AddColumn("Wins %");
 
-        foreach (var element in GetCharacterWinRates(response.CharacterWinRate))
+        foreach (var element in GetCharacterWinRates(response.CharacterInfos))
         {
             var name = element.CharacterName;
             var wins = element.WinCount;

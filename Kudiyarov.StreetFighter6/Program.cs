@@ -15,10 +15,12 @@ internal static class Program
         var authOptions = builder.Configuration.GetRequiredValue<Authentication>("Authentication");
         
         builder.Logging.ClearProviders();
+        builder.Services.AddScoped<StreetFighterLogic>();
         builder.Services.AddScoped<InitAction>();
         builder.Services.AddScoped<UpdateAction>();
         builder.Services.AddStreetFighterClient(authOptions);
         builder.Services.AddSingleton<IStyleProvider, StyleProvider>();
+        builder.Services.AddMemoryCache();
 
         var app = builder.Build();
         var table = new Table();

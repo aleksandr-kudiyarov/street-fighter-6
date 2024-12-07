@@ -10,15 +10,20 @@ public class StreetFighterLogic(
     StreetFighterClient client,
     IMemoryCache cache)
 {
-    public async Task<IEnumerable<CharacterInfo>> GetCharacterInfos(CancellationToken cancellationToken = default)
+    public async Task<GetCharacterInfoResponse> GetCharacterInfos(CancellationToken cancellationToken = default)
     {
         var winRate = await GetWinRate(cancellationToken);
         var leagueInfo = await GetLeagueInfo(cancellationToken);
 
-        var response = winRate.CharacterWinRate.Join(leagueInfo.CharacterLeagueInfos,
+        var characterInfos = winRate.CharacterWinRate.Join(leagueInfo.CharacterLeagueInfos,
             left => left.CharacterId,
             right => right.CharacterId,
             GetCharacterInfo);
+
+        var response = new GetCharacterInfoResponse
+        {
+            CharacterInfos = characterInfos
+        };
         
         return response;
     }

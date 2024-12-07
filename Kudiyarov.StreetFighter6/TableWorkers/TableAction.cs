@@ -1,25 +1,25 @@
-using Kudiyarov.StreetFighter6.HttpDal;
-using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Response;
+using Kudiyarov.StreetFighter6.Common;
+using Kudiyarov.StreetFighter6.Logic.Implementations;
 using Spectre.Console;
 
 namespace Kudiyarov.StreetFighter6.TableWorkers;
 
-public abstract class TableAction(StreetFighterClient client)
+public abstract class TableAction(StreetFighterLogic client)
 {
     public async Task Invoke(Table table)
     {
-        var response = await client.GetWinRate();
+        var response = await client.GetCharacterInfos();
         Action(table, response);
     }
 
-    protected abstract void Action(Table table, GetWinRateResponse response);
+    protected abstract void Action(Table table, GetCharacterInfoResponse response);
 
-    protected IEnumerable<CharacterWinRates> GetCharacterWinRates(IEnumerable<CharacterWinRates> winRates)
+    protected static IEnumerable<CharacterInfo> GetCharacterWinRates(IEnumerable<CharacterInfo> winRates)
     {
         return winRates.Where(IsCharacter);
     }
     
-    private static bool IsCharacter(CharacterWinRates source)
+    private static bool IsCharacter(CharacterInfo source)
     {
         const int any = 253;
         const int random = 254;
