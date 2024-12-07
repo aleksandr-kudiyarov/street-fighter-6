@@ -1,4 +1,4 @@
-using Kudiyarov.StreetFighter6.Common;
+using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.Logic.Implementations;
 using Spectre.Console;
 
@@ -95,18 +95,4 @@ public abstract class TableAction(StreetFighterLogic client)
 
         return leagueInfo;
     }
-}
-
-public record struct LeagueInfo(LeagueEnum League, int Level);
-
-public enum LeagueEnum
-{
-    Rookie = 0,
-    Iron = 1,
-    Bronze = 2,
-    Silver = 3,
-    Gold = 4,
-    Platinum = 5,
-    Diamond = 6,
-    Master = 7
 }

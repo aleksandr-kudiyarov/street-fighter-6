@@ -1,4 +1,4 @@
-using Kudiyarov.StreetFighter6.Common;
+using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.HttpDal;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Response;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Response;

@@ -1,4 +1,4 @@
-namespace Kudiyarov.StreetFighter6.Common;
+namespace Kudiyarov.StreetFighter6.Common.Entities;
 
 public record GetCharacterInfoResponse
 {
