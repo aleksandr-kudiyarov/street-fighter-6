@@ -12,13 +12,13 @@ internal static class Program
     {
         var builder = Host.CreateApplicationBuilder(args);
         var configuration = builder.Configuration.GetRequiredValue<Configuration>("Configuration");
-        var authOptions = builder.Configuration.GetRequiredValue<Authentication>("Authentication");
+        var authentication = builder.Configuration.GetRequiredValue<Authentication>("Authentication");
         
         builder.Logging.ClearProviders();
         builder.Services.AddScoped<StreetFighterLogic>();
         builder.Services.AddScoped<InitAction>();
         builder.Services.AddScoped<UpdateAction>();
-        builder.Services.AddStreetFighterClient(authOptions);
+        builder.Services.AddStreetFighterClient(authentication);
         builder.Services.AddSingleton<StyleProvider<Percentage>, WinRateStyleProvider>();
         builder.Services.AddSingleton<StyleProvider<LeagueEnum>, LeagueInfoStyleProvider>();
         builder.Services.AddMemoryCache();
