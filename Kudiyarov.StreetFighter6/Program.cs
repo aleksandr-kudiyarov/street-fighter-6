@@ -1,3 +1,4 @@
+using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.Extensions;
 using Kudiyarov.StreetFighter6.Logic;
 using Kudiyarov.StreetFighter6.TableWorkers;
@@ -18,7 +19,8 @@ internal static class Program
         builder.Services.AddScoped<InitAction>();
         builder.Services.AddScoped<UpdateAction>();
         builder.Services.AddStreetFighterClient(authOptions);
-        builder.Services.AddSingleton<StyleProvider, StyleProvider>();
+        builder.Services.AddSingleton<StyleProvider<Percentage>, WinRateStyleProvider>();
+        builder.Services.AddSingleton<StyleProvider<LeagueEnum>, LeagueInfoStyleProvider>();
         builder.Services.AddMemoryCache();
 
         var app = builder.Build();

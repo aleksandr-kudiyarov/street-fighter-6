@@ -6,7 +6,8 @@ namespace Kudiyarov.StreetFighter6.TableWorkers;
 
 public sealed class InitAction(
     StreetFighterLogic client,
-    StyleProvider styleProvider)
+    StyleProvider<Percentage> percentageStyleProvider,
+    StyleProvider<LeagueEnum> leagueStyleProvider)
     : TableAction(client)
 {
     protected override void Action(Table table, GetCharacterInfoResponse response)
@@ -24,13 +25,13 @@ public sealed class InitAction(
             var wins = element.WinCount;
             var battles = element.BattleCount;
             var winsPercentage = (double)element.WinCount / element.BattleCount;
-            var winsPercentageStyle = styleProvider.GetWinRateStyle(winsPercentage);
+            var winsPercentageStyle = percentageStyleProvider.GetStyle(winsPercentage);
             var leaguePoints = element.LeaguePoint;
-            
+
             var leagueInfo = GetLeagueInfo(leaguePoints);
             var leagueLevel = GetLeagueLevel(leagueInfo.Level);
-            var leagueStyle = styleProvider.GetLeagueStyle(leagueInfo.League);
-            
+            var leagueStyle = leagueStyleProvider.GetStyle(leagueInfo.League);
+
             table.AddRow(
                 new Text(name),
                 new Text(wins.ToString()),
