@@ -27,22 +27,22 @@ public abstract class TableAction(StreetFighterLogic client)
         return isCharacter;
     }
 
-    protected string GetLeagueLevel(int leagueLevel)
+    protected static string GetLeagueLevel(int leagueLevel)
     {
         var level = leagueLevel switch
         {
-            5 => "[\u2605\u2605\u2605\u2605\u2605]",
-            4 => "[\u2605\u2605\u2605\u2605 ]",
-            3 => "[\u2605\u2605\u2605  ]",
-            2 => "[\u2605\u2605   ]",
-            1 => "[\u2605    ]",
-            _ => throw new ArgumentOutOfRangeException(nameof(leagueLevel), leagueLevel, null)
+            5 => """[★★★★★]""",
+            4 => """[★★★★ ]""",
+            3 => """[★★★  ]""",
+            2 => """[★★   ]""",
+            1 => """[★    ]""",
+            _ => throw new ArgumentOutOfRangeException(nameof(leagueLevel), leagueLevel, "Value must be between 1 and 5.")
         };
 
         return level;
     }
 
-    protected LeagueInfo GetLeagueInfo(int leaguePoints)
+    protected static LeagueInfo GetLeagueInfo(int leaguePoints)
     {
         
         var leagueInfo = leaguePoints switch
