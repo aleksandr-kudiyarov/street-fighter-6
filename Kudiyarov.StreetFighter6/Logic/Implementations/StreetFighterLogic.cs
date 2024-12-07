@@ -6,7 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Kudiyarov.StreetFighter6.Logic.Implementations;
 
-public class Logic(
+public class StreetFighterLogic(
     StreetFighterClient client,
     IMemoryCache cache)
 {
