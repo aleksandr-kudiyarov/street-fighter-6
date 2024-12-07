@@ -101,12 +101,12 @@ public record struct LeagueInfo(LeagueEnum League, int Level);
 
 public enum LeagueEnum
 {
-    Rookie,
-    Iron,
-    Bronze,
-    Silver,
-    Gold,
-    Platinum,
-    Diamond,
-    Master
+    Rookie = 0,
+    Iron = 1,
+    Bronze = 2,
+    Silver = 3,
+    Gold = 4,
+    Platinum = 5,
+    Diamond = 6,
+    Master = 7
 }
