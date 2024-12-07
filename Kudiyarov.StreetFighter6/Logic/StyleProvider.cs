@@ -1,10 +1,9 @@
 using Kudiyarov.StreetFighter6.Common.Entities;
-using Kudiyarov.StreetFighter6.Logic.Interfaces;
 using Spectre.Console;
 
-namespace Kudiyarov.StreetFighter6.Logic.Implementations;
+namespace Kudiyarov.StreetFighter6.Logic;
 
-public class StyleProvider : IStyleProvider
+public class StyleProvider
 {
     private const double Step = (double) 1 / 3;
 

@@ -1,6 +1,5 @@
 using Kudiyarov.StreetFighter6.Extensions;
-using Kudiyarov.StreetFighter6.Logic.Implementations;
-using Kudiyarov.StreetFighter6.Logic.Interfaces;
+using Kudiyarov.StreetFighter6.Logic;
 using Kudiyarov.StreetFighter6.TableWorkers;
 using Spectre.Console;
 
@@ -19,7 +18,7 @@ internal static class Program
         builder.Services.AddScoped<InitAction>();
         builder.Services.AddScoped<UpdateAction>();
         builder.Services.AddStreetFighterClient(authOptions);
-        builder.Services.AddSingleton<IStyleProvider, StyleProvider>();
+        builder.Services.AddSingleton<StyleProvider, StyleProvider>();
         builder.Services.AddMemoryCache();
 
         var app = builder.Build();

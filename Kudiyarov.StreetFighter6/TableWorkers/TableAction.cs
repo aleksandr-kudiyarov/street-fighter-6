@@ -1,5 +1,5 @@
 using Kudiyarov.StreetFighter6.Common.Entities;
-using Kudiyarov.StreetFighter6.Logic.Implementations;
+using Kudiyarov.StreetFighter6.Logic;
 using Spectre.Console;
 
 namespace Kudiyarov.StreetFighter6.TableWorkers;

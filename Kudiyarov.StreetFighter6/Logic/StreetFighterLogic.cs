@@ -4,7 +4,7 @@ using Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Response;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Response;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace Kudiyarov.StreetFighter6.Logic.Implementations;
+namespace Kudiyarov.StreetFighter6.Logic;
 
 public class StreetFighterLogic(
     StreetFighterClient client,

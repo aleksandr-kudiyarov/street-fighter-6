@@ -1,13 +1,12 @@
 using Kudiyarov.StreetFighter6.Common.Entities;
-using Kudiyarov.StreetFighter6.Logic.Implementations;
-using Kudiyarov.StreetFighter6.Logic.Interfaces;
+using Kudiyarov.StreetFighter6.Logic;
 using Spectre.Console;
 
 namespace Kudiyarov.StreetFighter6.TableWorkers;
 
 public sealed class UpdateAction(
     StreetFighterLogic client,
-    IStyleProvider styleProvider)
+    StyleProvider styleProvider)
     : TableAction(client)
 {
     protected override void Action(Table table, GetCharacterInfoResponse response)
