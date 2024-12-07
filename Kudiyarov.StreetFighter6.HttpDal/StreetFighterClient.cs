@@ -15,26 +15,24 @@ public class StreetFighterClient(HttpClient httpClient)
     private readonly GetWinRateRequest _getWinRateRequest = GetWinRateRequest();
     private readonly GetLeagueInfoRequest _getLeagueInfoRequest = GetLeagueInfoRequest();
 
-    public async Task<GetWinRateResponse> GetWinRate(CancellationToken cancellationToken = default)
+    public async Task<GetWinRateResponse?> GetWinRate(CancellationToken cancellationToken = default)
     {
         const string uri = "https://www.streetfighter.com/6/buckler/api/profile/play/act/characterwinrate";
 
         var response = await httpClient.PostAsJsonAsync(uri, _getWinRateRequest, cancellationToken: cancellationToken);
         response.EnsureSuccessStatusCode();
         var root = await response.Content.ReadFromJsonAsync<GetWinRateResponseRoot>(cancellationToken: cancellationToken);
-        ArgumentNullException.ThrowIfNull(root);
-        return root.Response;
+        return root?.Response;
     }
 
-    public async Task<GetLeagueInfoResponse> GetLeagueInfo(CancellationToken cancellationToken = default)
+    public async Task<GetLeagueInfoResponse?> GetLeagueInfo(CancellationToken cancellationToken = default)
     {
         const string uri = "https://www.streetfighter.com/6/buckler/api/profile/play/act/leagueinfo";
 
         var response = await httpClient.PostAsJsonAsync(uri, _getLeagueInfoRequest, cancellationToken: cancellationToken);
         response.EnsureSuccessStatusCode();
         var root = await response.Content.ReadFromJsonAsync<GetLeagueInfoResponseRoot>(cancellationToken: cancellationToken);
-        ArgumentNullException.ThrowIfNull(root);
-        return root.Response;
+        return root?.Response;
     }
 
     private static GetWinRateRequest GetWinRateRequest()
