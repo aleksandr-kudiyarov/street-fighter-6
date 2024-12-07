@@ -25,21 +25,23 @@ internal static class Program
 
         var app = builder.Build();
         var table = new Table();
+        var request = new GetCharacterInfosRequest(configuration.ProfileId);
 
         await AnsiConsole.Live(table)
             .StartAsync(async ctx =>
             {
-                await InvokeTableAction<InitAction>(ctx, table, app.Services);
+                await InvokeTableAction<InitAction>(request, ctx, table, app.Services);
 
                 while (true)
                 {
                     await Task.Delay(configuration.Delay);
-                    await InvokeTableAction<UpdateAction>(ctx, table, app.Services);
+                    await InvokeTableAction<UpdateAction>(request, ctx, table, app.Services);
                 }
             });
     }
  
     private static async Task InvokeTableAction<TAction>(
+        GetCharacterInfosRequest request,
         LiveDisplayContext ctx,
         Table table,
         IServiceProvider serviceProvider)
@@ -47,7 +49,7 @@ internal static class Program
     {
         await using var scope = serviceProvider.CreateAsyncScope();
         var action = scope.ServiceProvider.GetRequiredService<TAction>();
-        await action.Invoke(table);
+        await action.Invoke(request, table);
         ctx.Refresh();
     }
 }

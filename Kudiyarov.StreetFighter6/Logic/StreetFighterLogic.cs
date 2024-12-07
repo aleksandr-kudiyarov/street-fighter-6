@@ -10,11 +10,16 @@ public class StreetFighterLogic(
     StreetFighterClient client,
     IMemoryCache cache)
 {
-    public async Task<GetCharacterInfoResponse> GetCharacterInfos(CancellationToken cancellationToken = default)
+    public async Task<GetCharacterInfoResponse> GetCharacterInfos(
+        GetCharacterInfosRequest request,
+        CancellationToken cancellationToken = default)
     {
-        var winRate = await GetWinRate(cancellationToken);
-        var leagueInfo = await GetLeagueInfo(cancellationToken);
+        var winRateTask = GetWinRate(request, cancellationToken);
+        var leagueInfoTask = GetLeagueInfo(request, cancellationToken);
 
+        var winRate = await winRateTask;
+        var leagueInfo = await leagueInfoTask;
+        
         var characterInfos = winRate.CharacterWinRate.Join(leagueInfo.CharacterLeagueInfos,
             left => left.CharacterId,
             right => right.CharacterId,
@@ -28,28 +33,32 @@ public class StreetFighterLogic(
         return response;
     }
 
-    private async Task<GetWinRateResponse> GetWinRate(CancellationToken cancellationToken = default)
+    private async Task<GetWinRateResponse> GetWinRate(
+        GetCharacterInfosRequest request,
+        CancellationToken cancellationToken = default)
     {
         var winRate = await cache.GetOrCreateAsync(
-            "GetWinRate",
+            $"GetWinRate:{request}",
             async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(5);
-                return await client.GetWinRate(cancellationToken);
+                return await client.GetWinRate(request, cancellationToken);
             });
         
         ArgumentNullException.ThrowIfNull(winRate);
         return winRate;
     }
 
-    private async Task<GetLeagueInfoResponse> GetLeagueInfo(CancellationToken cancellationToken = default)
+    private async Task<GetLeagueInfoResponse> GetLeagueInfo(
+        GetCharacterInfosRequest request,
+        CancellationToken cancellationToken = default)
     {
         var leagueInfo = await cache.GetOrCreateAsync(
-            "GetLeagueInfo",
+            $"GetLeagueInfo:{request}",
             async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(5);
-                return await client.GetLeagueInfo(cancellationToken);
+                return await client.GetLeagueInfo(request, cancellationToken);
             });
         
         ArgumentNullException.ThrowIfNull(leagueInfo);

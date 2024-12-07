@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Kudiyarov.StreetFighter6.Common\Kudiyarov.StreetFighter6.Common.csproj" />
+    </ItemGroup>
+
 </Project>

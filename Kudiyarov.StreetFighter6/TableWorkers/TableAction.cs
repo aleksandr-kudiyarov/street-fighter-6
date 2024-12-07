@@ -6,9 +6,9 @@ namespace Kudiyarov.StreetFighter6.TableWorkers;
 
 public abstract class TableAction(StreetFighterLogic client)
 {
-    public async Task Invoke(Table table)
+    public async Task Invoke(GetCharacterInfosRequest request, Table table)
     {
-        var response = await client.GetCharacterInfos();
+        var response = await client.GetCharacterInfos(request);
         Action(table, response);
     }
 
