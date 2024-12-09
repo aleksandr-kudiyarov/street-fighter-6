@@ -38,9 +38,9 @@ public class StreetFighterClient(HttpClient httpClient)
         return root?.Response;
     }
 
-    private static GetWinRateRequest GetWinRateRequest(GetCharacterInfosRequest request)
+    private static GetWinRateApiRequest GetWinRateRequest(GetCharacterInfosRequest request)
     {
-        var apiRequest = new GetWinRateRequest
+        var apiRequest = new GetWinRateApiRequest
         {
             TargetShortId = request.ProfileId,
             TargetSeasonId = TargetSeasonId,
@@ -51,9 +51,9 @@ public class StreetFighterClient(HttpClient httpClient)
         return apiRequest;
     }
 
-    private static GetLeagueInfoRequest GetLeagueInfoRequest(GetCharacterInfosRequest request)
+    private static GetLeagueInfoApiRequest GetLeagueInfoRequest(GetCharacterInfosRequest request)
     {
-        var apiRequest = new GetLeagueInfoRequest
+        var apiRequest = new GetLeagueInfoApiRequest
         {
             TargetShortId = request.ProfileId,
             TargetSeasonId = TargetSeasonId,

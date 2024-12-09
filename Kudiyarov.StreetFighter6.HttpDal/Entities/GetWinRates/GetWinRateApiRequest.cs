@@ -1,18 +1,18 @@
 using System.Text.Json.Serialization;
 
-namespace Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo;
+namespace Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates;
 
-public record GetLeagueInfoRequest
+public record GetWinRateApiRequest
 {
     [JsonPropertyName("targetShortId")]
     public required long TargetShortId { get; init; }
     
     [JsonPropertyName("targetSeasonId")]
-    public required long TargetSeasonId { get; init; }
+    public required int TargetSeasonId { get; init; }
+    
+    [JsonPropertyName("targetModeId")]
+    public required int TargetModeId { get; init; }
     
     [JsonPropertyName("locale")]
     public required string Locale { get; init; }
-    
-    [JsonPropertyName("peak")]
-    public required bool Peak { get; init; }
 }
