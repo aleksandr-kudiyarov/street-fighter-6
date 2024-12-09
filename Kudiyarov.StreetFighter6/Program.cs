@@ -21,7 +21,12 @@ builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 var table = new Table();
-var request = new GetCharacterInfosRequest(configuration.ProfileId);
+
+var request = new GetCharacterInfoRequest
+{
+    ProfileId = configuration.ProfileId,
+    Season = configuration.Season
+};
 
 await AnsiConsole.Live(table)
     .StartAsync(async ctx =>
@@ -38,7 +43,7 @@ await AnsiConsole.Live(table)
 return;
 
 static async Task InvokeTableAction<TAction>(
-    GetCharacterInfosRequest request,
+    GetCharacterInfoRequest request,
     LiveDisplayContext ctx,
     Table table,
     IServiceProvider serviceProvider)

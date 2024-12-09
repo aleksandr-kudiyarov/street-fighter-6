@@ -13,7 +13,7 @@ public class StreetFighterClient(HttpClient httpClient)
     private const int TargetSeasonId = -1;
     
     public async Task<GetWinRateResponse?> GetWinRate(
-        GetCharacterInfosRequest request,
+        GetCharacterInfoRequest request,
         CancellationToken cancellationToken = default)
     {
         const string uri = "https://www.streetfighter.com/6/buckler/api/profile/play/act/characterwinrate";
@@ -26,7 +26,7 @@ public class StreetFighterClient(HttpClient httpClient)
     }
 
     public async Task<GetLeagueInfoResponse?> GetLeagueInfo(
-        GetCharacterInfosRequest request,
+        GetLeagueInfoRequest request,
         CancellationToken cancellationToken = default)
     {
         const string uri = "https://www.streetfighter.com/6/buckler/api/profile/play/act/leagueinfo";
@@ -38,7 +38,7 @@ public class StreetFighterClient(HttpClient httpClient)
         return root?.Response;
     }
 
-    private static GetWinRateApiRequest GetWinRateRequest(GetCharacterInfosRequest request)
+    private static GetWinRateApiRequest GetWinRateRequest(GetCharacterInfoRequest request)
     {
         var apiRequest = new GetWinRateApiRequest
         {
@@ -51,14 +51,14 @@ public class StreetFighterClient(HttpClient httpClient)
         return apiRequest;
     }
 
-    private static GetLeagueInfoApiRequest GetLeagueInfoRequest(GetCharacterInfosRequest request)
+    private static GetLeagueInfoApiRequest GetLeagueInfoRequest(GetLeagueInfoRequest request)
     {
         var apiRequest = new GetLeagueInfoApiRequest
         {
             TargetShortId = request.ProfileId,
-            TargetSeasonId = TargetSeasonId,
+            TargetSeasonId = request.SeasonId,
             Locale = Locale,
-            Peak = true
+            Peak = false
         };
         
         return apiRequest;
