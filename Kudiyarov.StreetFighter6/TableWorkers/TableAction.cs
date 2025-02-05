@@ -1,12 +1,19 @@
 using CommunityToolkit.Diagnostics;
 using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.Logic;
+using Kudiyarov.StreetFighter6.StyleProviders;
 using Spectre.Console;
+using Spectre.Console.Rendering;
 
 namespace Kudiyarov.StreetFighter6.TableWorkers;
 
-public abstract class TableAction(StreetFighterLogic client)
+public abstract class TableAction(
+    StreetFighterLogic client,
+    StyleProvider<LeagueEnum> leagueStyleProvider,
+    StyleProvider<Percentage> percentageStyleProvider)
 {
+    private static readonly IRenderable EmptyText = new Text(string.Empty);
+    
     public async Task Invoke(GetCharacterInfoRequest request, Table table)
     {
         var response = await client.GetCharacterInfos(request);
@@ -27,8 +34,59 @@ public abstract class TableAction(StreetFighterLogic client)
         var isCharacter = source.CharacterId is not (any or random);
         return isCharacter;
     }
+    
+    protected static IRenderable GetWins(CharacterInfo character)
+    {
+        var wins = character.WinCount;
+        return new Text(wins.ToString());
+    }
+    
+    protected static IRenderable GetBattles(CharacterInfo character)
+    {
+        var battles = character.BattleCount;
+        return new Text(battles.ToString());
+    }
 
-    protected static string GetLeagueLevel(int leagueLevel)
+    protected IRenderable GetWinsPercentage(CharacterInfo character)
+    {
+        if (character.BattleCount == 0)
+        {
+            return EmptyText;
+        }
+        
+        var winsPercentage = (double) character.WinCount / character.BattleCount;
+        var winsPercentageStyle = percentageStyleProvider.GetStyle(winsPercentage);
+        return new Text(winsPercentage.ToString("P1"), winsPercentageStyle);
+    }
+
+    protected IRenderable GetLeaguePoints(CharacterInfo character)
+    {
+        var leaguePoints = character.LeaguePoint;
+
+        if (leaguePoints == null)
+        {
+            return EmptyText;
+        }
+        
+        return new Text(leaguePoints.Value.ToString());
+    }
+    
+    protected IRenderable GetLeagueLevel(CharacterInfo character)
+    {
+        var leaguePoints = character.LeaguePoint;
+
+        if (leaguePoints == null)
+        {
+            return EmptyText;
+        }
+        
+        var leagueInfo = GetLeagueInfo(leaguePoints.Value);
+        var leagueLevel = GetLeagueLevel(leagueInfo.Level);
+        var leagueStyle = leagueStyleProvider.GetStyle(leagueInfo.League);
+        return new Text(leagueLevel, leagueStyle);
+    }
+
+    private static string GetLeagueLevel(int leagueLevel)
     {
         var level = leagueLevel switch
         {
@@ -43,7 +101,7 @@ public abstract class TableAction(StreetFighterLogic client)
         return level;
     }
 
-    protected static LeagueInfo GetLeagueInfo(int leaguePoints)
+    private static LeagueInfo GetLeagueInfo(int leaguePoints)
     {
         
         var leagueInfo = leaguePoints switch
@@ -91,7 +149,8 @@ public abstract class TableAction(StreetFighterLogic client)
             >= 400 => new LeagueInfo(LeagueEnum.Rookie, 3),
             >= 200 => new LeagueInfo(LeagueEnum.Rookie, 2),
             >= 0 => new LeagueInfo(LeagueEnum.Rookie, 1),
-            _ => throw new ArgumentOutOfRangeException(nameof(leaguePoints), leaguePoints, null)
+            
+            < 0 => ThrowHelper.ThrowArgumentOutOfRangeException<LeagueInfo>(nameof(leaguePoints), leaguePoints, "Value must be greater than 0"),
         };
 
         return leagueInfo;

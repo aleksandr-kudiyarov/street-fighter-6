@@ -7,9 +7,12 @@ namespace Kudiyarov.StreetFighter6.TableWorkers;
 
 public sealed class InitAction(
     StreetFighterLogic client,
-    StyleProvider<Percentage> percentageStyleProvider,
-    StyleProvider<LeagueEnum> leagueStyleProvider)
-    : TableAction(client)
+    StyleProvider<LeagueEnum> leagueStyleProvider,
+    StyleProvider<Percentage> percentageStyleProvider)
+    : TableAction(
+        client,
+        leagueStyleProvider,
+        percentageStyleProvider)
 {
     protected override void Action(Table table, GetCharacterInfoResponse response)
     {
@@ -20,26 +23,17 @@ public sealed class InitAction(
         table.AddColumn("League Points");
         table.AddColumn("League");
 
-        foreach (var element in GetCharacterWinRates(response.CharacterInfos))
+        foreach (var character in GetCharacterWinRates(response.CharacterInfos))
         {
-            var name = element.CharacterName;
-            var wins = element.WinCount;
-            var battles = element.BattleCount;
-            var winsPercentage = (double)element.WinCount / element.BattleCount;
-            var winsPercentageStyle = percentageStyleProvider.GetStyle(winsPercentage);
-            var leaguePoints = element.LeaguePoint;
-
-            var leagueInfo = GetLeagueInfo(leaguePoints);
-            var leagueLevel = GetLeagueLevel(leagueInfo.Level);
-            var leagueStyle = leagueStyleProvider.GetStyle(leagueInfo.League);
+            var name = character.CharacterName;
 
             table.AddRow(
                 new Text(name),
-                new Text(wins.ToString()),
-                new Text(battles.ToString()),
-                new Text(winsPercentage.ToString("P1"), winsPercentageStyle),
-                new Text(leaguePoints.ToString()),
-                new Text(leagueLevel, leagueStyle)
+                GetWins(character),
+                GetBattles(character),
+                GetWinsPercentage(character),
+                GetLeaguePoints(character),
+                GetLeagueLevel(character)
             );
         }
     }
