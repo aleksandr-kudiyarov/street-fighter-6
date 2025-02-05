@@ -9,5 +9,5 @@ public record CharacterInfo
     public required int WinCount { get; init; }
     public required int BattleCount { get; init; }
     
-    public required int LeaguePoint { get; init; }
+    public required int? LeaguePoint { get; init; }
 }

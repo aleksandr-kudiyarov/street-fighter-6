@@ -176,6 +176,8 @@ public class StreetFighterLogic(
 
     private static CharacterInfo GetCharacterInfo(CharacterWinRates winRate, CharacterLeagueInfo leagueInfo)
     {
+        var leaguePoint = leagueInfo.LeagueInfo.LeaguePoint;
+
         var result = new CharacterInfo
         {
             CharacterId = winRate.CharacterId,
@@ -183,7 +185,9 @@ public class StreetFighterLogic(
             CharacterSort = winRate.CharacterSort,
             WinCount = winRate.WinCount,
             BattleCount = winRate.BattleCount,
-            LeaguePoint = leagueInfo.LeagueInfo.LeaguePoint
+            LeaguePoint = leaguePoint == EmptyLeaguePoints
+                ? null
+                : leaguePoint
         };
         
         return result;
