@@ -1,3 +1,4 @@
+using CommunityToolkit.Diagnostics;
 using Kudiyarov.StreetFighter6.Common.Entities;
 using Spectre.Console;
 
@@ -26,7 +27,7 @@ public sealed class LeagueInfoStyleProvider : StyleProvider<LeagueEnum>
             LeagueEnum.Platinum => _platinumStyle,
             LeagueEnum.Diamond => _diamondStyle,
             LeagueEnum.Master => _masterStyle,
-            _ => throw new ArgumentOutOfRangeException(nameof(league), league, null)
+            _ => ThrowHelper.ThrowArgumentOutOfRangeException<Style>(nameof(league), league, "Value must be defined")
         };
 
         return style;
