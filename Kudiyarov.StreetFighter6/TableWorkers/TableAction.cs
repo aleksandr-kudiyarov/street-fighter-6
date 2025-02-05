@@ -1,3 +1,4 @@
+using CommunityToolkit.Diagnostics;
 using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.Logic;
 using Spectre.Console;
@@ -36,7 +37,7 @@ public abstract class TableAction(StreetFighterLogic client)
             3 => """[★★★  ]""",
             2 => """[★★   ]""",
             1 => """[★    ]""",
-            _ => throw new ArgumentOutOfRangeException(nameof(leagueLevel), leagueLevel, "Value must be between 1 and 5.")
+            _ => ThrowHelper.ThrowArgumentOutOfRangeException<string>(nameof(leagueLevel), leagueLevel, "Value must be between 1 and 5.")
         };
 
         return level;
