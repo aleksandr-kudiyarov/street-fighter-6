@@ -1,3 +1,4 @@
+using CommunityToolkit.Diagnostics;
 using Kudiyarov.StreetFighter6.Common.Entities;
 using Spectre.Console;
 
@@ -13,11 +14,10 @@ public sealed class WinRateStyleProvider : StyleProvider<Percentage>
     {
         var style = percentage.Value switch
         {
-            > 1 => throw new ArgumentOutOfRangeException(nameof(percentage), percentage, "Value must be between 0 and 1."),
+            < 0 or > 1 => ThrowHelper.ThrowArgumentOutOfRangeException<Style>(nameof(percentage), percentage, "Value must be between 0 and 1."),
             >= (double) 2 / 3 => _goodStyle,
             >= (double) 1 / 3 or double.NaN => _normalStyle,
-            >= (double) 0 / 3 => _badStyle,
-            < 0 => throw new ArgumentOutOfRangeException(nameof(percentage), percentage, "Value must be between 0 and 1.")
+            >= (double) 0 / 3 => _badStyle
         };
 
         return style;
