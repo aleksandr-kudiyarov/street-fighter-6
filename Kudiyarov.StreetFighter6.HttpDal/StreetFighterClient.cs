@@ -19,7 +19,6 @@ public class StreetFighterClient(HttpClient httpClient)
         
         var apiRequest = GetWinRateRequest(request);
         var response = await httpClient.PostAsJsonAsync(uri, apiRequest, cancellationToken);
-        response.EnsureSuccessStatusCode();
         var root = await response.Content.ReadFromJsonAsync<GetWinRateResponseRoot>(cancellationToken: cancellationToken);
         return root?.Response;
     }
@@ -32,7 +31,6 @@ public class StreetFighterClient(HttpClient httpClient)
 
         var apiRequest = GetLeagueInfoRequest(request);
         var response = await httpClient.PostAsJsonAsync(uri, apiRequest, cancellationToken);
-        response.EnsureSuccessStatusCode();
         var root = await response.Content.ReadFromJsonAsync<GetLeagueInfoResponseRoot>(cancellationToken: cancellationToken);
         return root?.Response;
     }
