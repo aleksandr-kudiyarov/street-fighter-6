@@ -103,7 +103,6 @@ public abstract class TableAction(
 
     private static LeagueInfo GetLeagueInfo(int leaguePoints)
     {
-        
         var leagueInfo = leaguePoints switch
         {
             >= 25000 => new LeagueInfo(LeagueEnum.Master, 1),
