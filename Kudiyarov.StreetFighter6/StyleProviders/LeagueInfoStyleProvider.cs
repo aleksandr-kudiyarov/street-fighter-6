@@ -19,14 +19,14 @@ public sealed class LeagueInfoStyleProvider : StyleProvider<LeagueEnum>
     {
         var style = league switch
         {
-            LeagueEnum.Rookie => _rookieStyle,
-            LeagueEnum.Iron => _ironStyle,
-            LeagueEnum.Bronze => _bronzeStyle,
-            LeagueEnum.Silver => _silverStyle,
-            LeagueEnum.Gold => _goldStyle,
-            LeagueEnum.Platinum => _platinumStyle,
-            LeagueEnum.Diamond => _diamondStyle,
             LeagueEnum.Master => _masterStyle,
+            LeagueEnum.Diamond => _diamondStyle,
+            LeagueEnum.Platinum => _platinumStyle,
+            LeagueEnum.Gold => _goldStyle,
+            LeagueEnum.Silver => _silverStyle,
+            LeagueEnum.Bronze => _bronzeStyle,
+            LeagueEnum.Iron => _ironStyle,
+            LeagueEnum.Rookie => _rookieStyle,
             _ => ThrowHelper.ThrowArgumentOutOfRangeException<Style>(nameof(league), league, "Value must be defined")
         };
 
