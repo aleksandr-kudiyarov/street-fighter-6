@@ -2,15 +2,21 @@ using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.HttpDal;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Response;
 using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Response;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Hybrid;
 
 namespace Kudiyarov.StreetFighter6.Logic;
 
 public class StreetFighterLogic(
     StreetFighterClient client,
-    IMemoryCache cache)
+    HybridCache cache)
 {
     private const int EmptyLeaguePoints = -1;
+    
+    private readonly HybridCacheEntryOptions _cacheOptions = new()
+    {
+        Expiration = TimeSpan.FromSeconds(5),
+        LocalCacheExpiration = TimeSpan.FromSeconds(5)
+    };
     
     public async Task<GetCharacterInfoResponse> GetCharacterInfos(
         GetCharacterInfoRequest request,
@@ -40,12 +46,10 @@ public class StreetFighterLogic(
         CancellationToken cancellationToken = default)
     {
         var winRate = await cache.GetOrCreateAsync(
-            $"GetWinRate:{request}",
-            async entry =>
-            {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(5);
-                return await client.GetWinRate(request, cancellationToken);
-            });
+            $"GetWinRate:{request.ProfileId}:{request.Season}",
+            async token => await client.GetWinRate(request, token),
+            _cacheOptions,
+            cancellationToken: cancellationToken);
         
         ArgumentNullException.ThrowIfNull(winRate);
         return winRate;
@@ -85,12 +89,10 @@ public class StreetFighterLogic(
         CancellationToken cancellationToken = default)
     {
         var leagueInfo = await cache.GetOrCreateAsync(
-            $"GetLeagueInfo:{request}",
-            async entry =>
-            {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(5);
-                return await client.GetLeagueInfo(request, cancellationToken);
-            });
+            $"GetLeagueInfo:{request.ProfileId}:{request.SeasonId}",
+            async token => await client.GetLeagueInfo(request, token),
+            _cacheOptions,
+            cancellationToken: cancellationToken);
         
         ArgumentNullException.ThrowIfNull(leagueInfo);
         return leagueInfo;
@@ -101,8 +103,9 @@ public class StreetFighterLogic(
         CancellationToken cancellationToken = default)
     {
         var result = await cache.GetOrCreateAsync(
-            $"GetAggregatedLeagueInfo:{request}",
-            async _ => await GetAggregatedLeagueInfoImpl(request, cancellationToken));
+            $"GetAggregatedLeagueInfo:{request.ProfileId}:{request.Season}",
+            async token => await GetAggregatedLeagueInfoImpl(request, token),
+            cancellationToken: cancellationToken);
 
         ArgumentNullException.ThrowIfNull(result);
         return result;

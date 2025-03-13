@@ -17,7 +17,7 @@ builder.Services.AddScoped<UpdateAction>();
 builder.Services.AddStreetFighterClient(authentication);
 builder.Services.AddSingleton<StyleProvider<Percentage>, WinRateStyleProvider>();
 builder.Services.AddSingleton<StyleProvider<LeagueEnum>, LeagueInfoStyleProvider>();
-builder.Services.AddMemoryCache();
+builder.Services.AddHybridCache();
 
 var app = builder.Build();
 var table = new Table();
