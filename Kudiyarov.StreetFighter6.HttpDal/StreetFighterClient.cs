@@ -10,7 +10,6 @@ namespace Kudiyarov.StreetFighter6.HttpDal;
 public class StreetFighterClient(HttpClient httpClient)
 {
     private const string Locale = "en";
-    private const int TargetSeasonId = -1;
     
     public async Task<GetWinRateResponse?> GetWinRate(
         GetCharacterInfoRequest request,
@@ -40,10 +39,12 @@ public class StreetFighterClient(HttpClient httpClient)
 
     private static GetWinRateApiRequest GetWinRateRequest(GetCharacterInfoRequest request)
     {
+        const int totalSeasonsId = -1;
+        
         var apiRequest = new GetWinRateApiRequest
         {
             TargetShortId = request.ProfileId,
-            TargetSeasonId = TargetSeasonId,
+            TargetSeasonId = totalSeasonsId,
             TargetModeId = 2,
             Locale = Locale
         };
