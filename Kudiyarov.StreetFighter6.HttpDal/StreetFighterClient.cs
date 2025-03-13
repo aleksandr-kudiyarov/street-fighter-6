@@ -58,8 +58,8 @@ public class StreetFighterClient(HttpClient httpClient)
         {
             TargetShortId = request.ProfileId,
             TargetSeasonId = request.SeasonId,
-            Locale = Locale,
-            Peak = false
+            Peak = false,
+            Locale = Locale
         };
         
         return apiRequest;
