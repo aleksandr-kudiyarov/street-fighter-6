@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Text.Json.Serialization;
 
-namespace Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Response;
+namespace Kudiyarov.StreetFighter6.Dal.Http.Entities.Entities.GetLeagueInfo.Response;
 
 [ImmutableObject(true)]
 public sealed record GetLeagueInfoResponse

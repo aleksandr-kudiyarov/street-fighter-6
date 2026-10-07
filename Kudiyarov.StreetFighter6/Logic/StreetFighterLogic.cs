@@ -1,13 +1,13 @@
 using Kudiyarov.StreetFighter6.Common.Entities;
-using Kudiyarov.StreetFighter6.HttpDal;
-using Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Response;
-using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Response;
+using Kudiyarov.StreetFighter6.Dal.Contracts;
+using Kudiyarov.StreetFighter6.Dal.Http.Entities.Entities.GetLeagueInfo.Response;
+using Kudiyarov.StreetFighter6.Dal.Http.Entities.Entities.GetWinRates.Response;
 using Microsoft.Extensions.Caching.Hybrid;
 
 namespace Kudiyarov.StreetFighter6.Logic;
 
 public class StreetFighterLogic(
-    StreetFighterClient client,
+    IStreetFighterClient client,
     HybridCache cache)
 {
     private const int EmptyLeaguePoints = -1;

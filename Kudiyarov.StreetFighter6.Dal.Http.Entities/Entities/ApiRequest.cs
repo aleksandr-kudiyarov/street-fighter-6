@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Kudiyarov.StreetFighter6.HttpDal.Entities;
+namespace Kudiyarov.StreetFighter6.Dal.Http.Entities.Entities;
 
 public abstract record ApiRequest
 {

@@ -1,13 +1,14 @@
 using System.Net.Http.Json;
 using Kudiyarov.StreetFighter6.Common.Entities;
-using Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo;
-using Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Response;
-using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates;
-using Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates.Response;
+using Kudiyarov.StreetFighter6.Dal.Contracts;
+using Kudiyarov.StreetFighter6.Dal.Http.Entities.Entities.GetLeagueInfo;
+using Kudiyarov.StreetFighter6.Dal.Http.Entities.Entities.GetLeagueInfo.Response;
+using Kudiyarov.StreetFighter6.Dal.Http.Entities.Entities.GetWinRates;
+using Kudiyarov.StreetFighter6.Dal.Http.Entities.Entities.GetWinRates.Response;
 
 namespace Kudiyarov.StreetFighter6.HttpDal;
 
-public class StreetFighterClient(HttpClient httpClient)
+public class StreetFighterClient(HttpClient httpClient) : IStreetFighterClient
 {
     private const string Locale = "en";
     

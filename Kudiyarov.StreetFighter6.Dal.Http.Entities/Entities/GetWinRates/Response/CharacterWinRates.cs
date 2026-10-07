@@ -1,17 +1,17 @@
 using System.Text.Json.Serialization;
 
-namespace Kudiyarov.StreetFighter6.HttpDal.Entities.GetLeagueInfo.Response;
+namespace Kudiyarov.StreetFighter6.Dal.Http.Entities.Entities.GetWinRates.Response;
 
-public record CharacterLeagueInfo
+public record CharacterWinRates
 {
+    [JsonPropertyName("battle_count")]
+    public required int BattleCount { get; init; }
+    
     [JsonPropertyName("character_id")]
     public required int CharacterId { get; init; }
     
-    [JsonPropertyName("is_played")]
-    public required bool IsPlayed { get; init; }
-    
-    [JsonPropertyName("league_info")]
-    public required LeagueInfo LeagueInfo { get; init; }
+    [JsonPropertyName("win_count")]
+    public required int WinCount { get; init; }
     
     [JsonPropertyName("character_name")]
     public required string CharacterName { get; init; }

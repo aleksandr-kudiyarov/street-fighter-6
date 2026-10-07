@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Kudiyarov.StreetFighter6.HttpDal.Entities.GetWinRates;
+namespace Kudiyarov.StreetFighter6.Dal.Http.Entities.Entities.GetWinRates;
 
 public record GetWinRateApiRequest : ApiRequest
 {
