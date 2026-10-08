@@ -11,4 +11,8 @@
       <ProjectReference Include="..\Kudiyarov.StreetFighter6.Dal.Contracts\Kudiyarov.StreetFighter6.Dal.Contracts.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.10.0" />
+    </ItemGroup>
+
 </Project>

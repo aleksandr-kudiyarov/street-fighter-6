@@ -45,12 +45,7 @@ public class StreetFighterLogic(
         GetCharacterInfoRequest request,
         CancellationToken cancellationToken = default)
     {
-        var winRate = await cache.GetOrCreateAsync(
-            $"GetWinRate:{request.ProfileId}:{request.Season}",
-            async token => await client.GetWinRate(request, token),
-            _cacheOptions,
-            cancellationToken: cancellationToken);
-        
+        var winRate = await client.GetWinRate(request, cancellationToken);
         ArgumentNullException.ThrowIfNull(winRate);
         return winRate;
     }
@@ -88,12 +83,7 @@ public class StreetFighterLogic(
         GetLeagueInfoRequest request,
         CancellationToken cancellationToken = default)
     {
-        var leagueInfo = await cache.GetOrCreateAsync(
-            $"GetLeagueInfo:{request.ProfileId}:{request.SeasonId}",
-            async token => await client.GetLeagueInfo(request, token),
-            _cacheOptions,
-            cancellationToken: cancellationToken);
-        
+        var leagueInfo = await client.GetLeagueInfo(request, cancellationToken);
         ArgumentNullException.ThrowIfNull(leagueInfo);
         return leagueInfo;
     }

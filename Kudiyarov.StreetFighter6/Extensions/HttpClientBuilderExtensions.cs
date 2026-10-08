@@ -17,5 +17,7 @@ public static class HttpClientBuilderExtensions
                 client.DefaultRequestHeaders.Add(HeaderNames.Cookie, options.Cookie);
             })
             .AddStandardResilienceHandler();
+
+        services.Decorate<IStreetFighterClient, CachedStreetFighterClient>();
     }
 }
