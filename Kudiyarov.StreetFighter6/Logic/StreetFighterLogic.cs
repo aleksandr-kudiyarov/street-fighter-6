@@ -12,12 +12,6 @@ public class StreetFighterLogic(
 {
     private const int EmptyLeaguePoints = -1;
     
-    private readonly HybridCacheEntryOptions _cacheOptions = new()
-    {
-        Expiration = TimeSpan.FromSeconds(5),
-        LocalCacheExpiration = TimeSpan.FromSeconds(5)
-    };
-    
     public async Task<GetCharacterInfoResponse> GetCharacterInfos(
         GetCharacterInfoRequest request,
         CancellationToken cancellationToken = default)
