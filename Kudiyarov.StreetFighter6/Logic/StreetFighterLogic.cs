@@ -2,11 +2,13 @@ using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.Dal.Contracts;
 using Kudiyarov.StreetFighter6.Dal.Http.Entities.Entities.GetLeagueInfo.Response;
 using Kudiyarov.StreetFighter6.Dal.Http.Entities.Entities.GetWinRates.Response;
+using Microsoft.Extensions.Caching.Hybrid;
 
 namespace Kudiyarov.StreetFighter6.Logic;
 
 public class StreetFighterLogic(
-    IStreetFighterClient client)
+    IStreetFighterClient client,
+    HybridCache cache)
 {
     private const int EmptyLeaguePoints = -1;
     
@@ -41,7 +43,7 @@ public class StreetFighterLogic(
         ArgumentNullException.ThrowIfNull(winRate);
         return winRate;
     }
-
+    
     private async Task<GetLeagueInfoResponse> GetLeagueInfo(
         GetCharacterInfoRequest request,
         CancellationToken cancellationToken = default)
@@ -52,12 +54,46 @@ public class StreetFighterLogic(
             SeasonId = request.Season
         };
         
-        var getLeagueInfoResponse = await GetLeagueInfoImpl(getLeagueInfoRequest, cancellationToken);
+        var leagueInfoTask = GetLeagueInfoImpl(getLeagueInfoRequest, cancellationToken);
+        var initialLeagueInfoTask = GetInitialLeagueInfo(getLeagueInfoRequest, cancellationToken);
+        
+        var leagueInfo = await leagueInfoTask;
+        var initialLeagueInfo = await initialLeagueInfoTask;
+        
+        var merged = Merge(
+            leagueInfo.CharacterLeagueInfos,
+            initialLeagueInfo.CharacterLeagueInfos);
 
-        while (getLeagueInfoRequest.SeasonId > 0 && !AllCharactersActual(getLeagueInfoResponse.CharacterLeagueInfos))
+        var response = new GetLeagueInfoResponse
         {
-            getLeagueInfoRequest = getLeagueInfoRequest with { SeasonId = getLeagueInfoRequest.SeasonId - 1 };
-            var previousGetLeagueInfoResponse = await GetLeagueInfoImpl(getLeagueInfoRequest, cancellationToken);
+            CharacterLeagueInfos = [.. merged]
+        };
+
+        return response;
+    }
+
+    private async Task<GetLeagueInfoResponse> GetInitialLeagueInfo(
+        GetLeagueInfoRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await cache.GetOrCreateAsync(
+            $"GetInitialLeagueInfo:{request.ProfileId}:{request.SeasonId}",
+            async token => await GetInitialLeagueInfoImpl(request, token),
+            cancellationToken: cancellationToken);
+        
+        return response;
+    }
+    
+    private async Task<GetLeagueInfoResponse> GetInitialLeagueInfoImpl(
+        GetLeagueInfoRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var getLeagueInfoResponse = await GetLeagueInfoImpl(request, cancellationToken);
+
+        while (request.SeasonId > 0 && !AllCharactersActual(getLeagueInfoResponse.CharacterLeagueInfos))
+        {
+            request = request with { SeasonId = request.SeasonId - 1 };
+            var previousGetLeagueInfoResponse = await GetLeagueInfoImpl(request, cancellationToken);
 
             var result = Merge(
                 getLeagueInfoResponse.CharacterLeagueInfos,
