@@ -60,14 +60,7 @@ public class StreetFighterLogic(
         var leagueInfo = await leagueInfoTask;
         var initialLeagueInfo = await initialLeagueInfoTask;
         
-        var merged = Merge(
-            leagueInfo.CharacterLeagueInfos,
-            initialLeagueInfo.CharacterLeagueInfos);
-
-        var response = new GetLeagueInfoResponse
-        {
-            CharacterLeagueInfos = [.. merged]
-        };
+        var response = GetMergedLeagueInfoResponse(leagueInfo, initialLeagueInfo);
 
         return response;
     }
@@ -95,14 +88,7 @@ public class StreetFighterLogic(
             request = request with { SeasonId = request.SeasonId - 1 };
             var previousGetLeagueInfoResponse = await GetLeagueInfoImpl(request, cancellationToken);
 
-            var result = Merge(
-                getLeagueInfoResponse.CharacterLeagueInfos,
-                previousGetLeagueInfoResponse.CharacterLeagueInfos);
-
-            getLeagueInfoResponse = new GetLeagueInfoResponse
-            {
-                CharacterLeagueInfos = [.. result]
-            };
+            getLeagueInfoResponse = GetMergedLeagueInfoResponse(getLeagueInfoResponse, previousGetLeagueInfoResponse);
         }
 
         return getLeagueInfoResponse;
@@ -121,6 +107,22 @@ public class StreetFighterLogic(
     {
         var result = characterLeagueInfos.All(info => info.LeagueInfo.LeaguePoint != EmptyLeaguePoints);
         return result;
+    }
+    
+    private static GetLeagueInfoResponse GetMergedLeagueInfoResponse(
+        GetLeagueInfoResponse primary,
+        GetLeagueInfoResponse secondary)
+    {
+        var result = Merge(
+            primary.CharacterLeagueInfos,
+            secondary.CharacterLeagueInfos);
+
+        var response = new GetLeagueInfoResponse
+        {
+            CharacterLeagueInfos = [.. result]
+        };
+        
+        return response;
     }
 
     private static IEnumerable<CharacterLeagueInfo> Merge(
