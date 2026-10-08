@@ -2,13 +2,11 @@ using Kudiyarov.StreetFighter6.Common.Entities;
 using Kudiyarov.StreetFighter6.Dal.Contracts;
 using Kudiyarov.StreetFighter6.Dal.Http.Entities.Entities.GetLeagueInfo.Response;
 using Kudiyarov.StreetFighter6.Dal.Http.Entities.Entities.GetWinRates.Response;
-using Microsoft.Extensions.Caching.Hybrid;
 
 namespace Kudiyarov.StreetFighter6.Logic;
 
 public class StreetFighterLogic(
-    IStreetFighterClient client,
-    HybridCache cache)
+    IStreetFighterClient client)
 {
     private const int EmptyLeaguePoints = -1;
     
@@ -54,23 +52,24 @@ public class StreetFighterLogic(
             SeasonId = request.Season
         };
         
-        var currentResponse = await GetLeagueInfoImpl(getLeagueInfoRequest, cancellationToken);
+        var getLeagueInfoResponse = await GetLeagueInfoImpl(getLeagueInfoRequest, cancellationToken);
 
-        if (AllCharactersActual(currentResponse.CharacterLeagueInfos))
+        while (getLeagueInfoRequest.SeasonId > 0 && !AllCharactersActual(getLeagueInfoResponse.CharacterLeagueInfos))
         {
-            return currentResponse;
+            getLeagueInfoRequest = getLeagueInfoRequest with { SeasonId = getLeagueInfoRequest.SeasonId - 1 };
+            var previousGetLeagueInfoResponse = await GetLeagueInfoImpl(getLeagueInfoRequest, cancellationToken);
+
+            var result = Merge(
+                getLeagueInfoResponse.CharacterLeagueInfos,
+                previousGetLeagueInfoResponse.CharacterLeagueInfos);
+
+            getLeagueInfoResponse = new GetLeagueInfoResponse
+            {
+                CharacterLeagueInfos = [.. result]
+            };
         }
-        
-        var older = await GetAggregatedLeagueInfo(request, cancellationToken);
-        
-        var result = Merge(currentResponse.CharacterLeagueInfos, older.CharacterLeagueInfos);
 
-        var response = new GetLeagueInfoResponse
-        {
-            CharacterLeagueInfos = result.ToList()
-        };
-        
-        return response;
+        return getLeagueInfoResponse;
     }
 
     private async Task<GetLeagueInfoResponse> GetLeagueInfoImpl(
@@ -80,58 +79,6 @@ public class StreetFighterLogic(
         var leagueInfo = await client.GetLeagueInfo(request, cancellationToken);
         ArgumentNullException.ThrowIfNull(leagueInfo);
         return leagueInfo;
-    }
-
-    private async Task<GetLeagueInfoResponse> GetAggregatedLeagueInfo(
-        GetCharacterInfoRequest request,
-        CancellationToken cancellationToken = default)
-    {
-        var result = await cache.GetOrCreateAsync(
-            $"GetAggregatedLeagueInfo:{request.ProfileId}:{request.Season}",
-            async token => await GetAggregatedLeagueInfoImpl(request, token),
-            cancellationToken: cancellationToken);
-
-        ArgumentNullException.ThrowIfNull(result);
-        return result;
-    }
-
-    private async Task<GetLeagueInfoResponse> GetAggregatedLeagueInfoImpl(
-        GetCharacterInfoRequest request,
-        CancellationToken cancellationToken = default)
-    {
-        var season = request.Season - 1;
-        
-        var getLeagueInfoRequest = new GetLeagueInfoRequest
-        {
-            ProfileId = request.ProfileId,
-            SeasonId = season
-        };
-        
-        var primaryResponse = await GetLeagueInfoImpl(getLeagueInfoRequest, cancellationToken);
-        
-        while (season >= 0 || AllCharactersActual(primaryResponse.CharacterLeagueInfos))
-        {
-            getLeagueInfoRequest = new GetLeagueInfoRequest
-            {
-                ProfileId = request.ProfileId,
-                SeasonId = season
-            };
-            
-            var secondaryResponse = await GetLeagueInfoImpl(getLeagueInfoRequest, cancellationToken);
-            
-            var result = Merge(
-                primaryResponse.CharacterLeagueInfos,
-                secondaryResponse.CharacterLeagueInfos);
-
-            primaryResponse = new GetLeagueInfoResponse
-            {
-                CharacterLeagueInfos = result.ToArray()
-            };
-
-            season--;
-        }
-
-        return primaryResponse;
     }
 
     private static bool AllCharactersActual(IEnumerable<CharacterLeagueInfo> characterLeagueInfos)
